@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 use Livewire\Volt\Volt;
 
-test('login screen can be rendered', function () {
+test('login screen can be rendered', function (): void {
     $response = $this->get('/login');
 
     $response
@@ -11,12 +13,12 @@ test('login screen can be rendered', function () {
         ->assertSeeVolt('pages.auth.login');
 });
 
-test('users can authenticate using the login screen', function () {
+test('users can authenticate using the login screen', function (): void {
     $user = User::factory()->create();
 
     $component = Volt::test('pages.auth.login')
-        ->set('form.email', $user->email)
-        ->set('form.password', 'password');
+        ->set('email', $user->email)
+        ->set('password', 'password');
 
     $component->call('login');
 
@@ -27,12 +29,12 @@ test('users can authenticate using the login screen', function () {
     $this->assertAuthenticated();
 });
 
-test('users can not authenticate with invalid password', function () {
+test('users can not authenticate with invalid password', function (): void {
     $user = User::factory()->create();
 
     $component = Volt::test('pages.auth.login')
-        ->set('form.email', $user->email)
-        ->set('form.password', 'wrong-password');
+        ->set('email', $user->email)
+        ->set('password', 'wrong-password');
 
     $component->call('login');
 
@@ -43,30 +45,58 @@ test('users can not authenticate with invalid password', function () {
     $this->assertGuest();
 });
 
-test('navigation menu can be rendered', function () {
+test('sidebar profile menu can be rendered', function (): void {
     $user = User::factory()->create();
 
     $this->actingAs($user);
 
-    $response = $this->get('/dashboard');
+    $response = $this->get('/');
 
     $response
         ->assertOk()
-        ->assertSeeVolt('layout.navigation');
+        ->assertSeeVolt('layout.sidebar.profile.dropdown');
 });
 
-test('users can logout', function () {
+test('header profile menu can be rendered', function (): void {
     $user = User::factory()->create();
 
     $this->actingAs($user);
 
-    $component = Volt::test('layout.navigation');
+    $response = $this->get('/');
+
+    $response
+        ->assertOk()
+        ->assertSeeVolt('layout.header.profile.dropdown');
+});
+
+test('users can logout from sidebar profile menu', function (): void {
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    $component = Volt::test('layout.sidebar.profile.dropdown');
 
     $component->call('logout');
 
     $component
         ->assertHasNoErrors()
-        ->assertRedirect('/');
+        ->assertRedirect('/login');
+
+    $this->assertGuest();
+});
+
+test('users can logout from header profile menu', function (): void {
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    $component = Volt::test('layout.header.profile.dropdown');
+
+    $component->call('logout');
+
+    $component
+        ->assertHasNoErrors()
+        ->assertRedirect('/login');
 
     $this->assertGuest();
 });

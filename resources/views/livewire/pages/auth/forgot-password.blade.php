@@ -1,31 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Actions\Auth\SendPasswordResetLinkAction;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 
 new #[Layout('layouts.guest')] class extends Component
 {
+    #[Validate(['required', 'string', 'email'])]
     public string $email = '';
 
     /**
      * Send a password reset link to the provided email address.
      */
-    public function sendPasswordResetLink(): void
+    public function sendPasswordResetLink(SendPasswordResetLinkAction $sendPasswordResetLink): void
     {
-        $this->validate([
-            'email' => ['required', 'string', 'email'],
-        ]);
+        $this->validate();
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $this->only('email')
-        );
-
-        if ($status != Password::RESET_LINK_SENT) {
-            $this->addError('email', __($status));
+        try {
+            $status = $sendPasswordResetLink->execute($this->email);
+        } catch (ValidationException $e) {
+            $this->addError('email', $e->getMessage());
 
             return;
         }
@@ -36,26 +35,35 @@ new #[Layout('layouts.guest')] class extends Component
     }
 }; ?>
 
-<div>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form wire:submit="sendPasswordResetLink">
-        <!-- Email Address -->
+<flux:card>
+    <form wire:submit="sendPasswordResetLink" class="space-y-6">
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <flux:heading size="lg">{{ __('Reset your password') }}</flux:heading>
+            <flux:subheading>{{ __('Enter your email to receive a password reset link') }}</flux:subheading>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
+        <!-- Session Status -->
+        <x-auth-session-status :status="session('status')" />
+
+        <div class="space-y-6">
+            <flux:input
+                wire:model="email"
+                label="{{ __('Email') }}"
+                type="email"
+                placeholder="{{ __('Your email address') }}"
+                required
+                autofocus
+            />
+        </div>
+
+        <div class="space-y-2">
+            <flux:button variant="primary" class="w-full" type="submit">
                 {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+            </flux:button>
+
+            <flux:button variant="ghost" class="w-full" href="{{ route('login') }}" wire:navigate>
+                {{ __('Back to login') }}
+            </flux:button>
         </div>
     </form>
-</div>
+</flux:card>

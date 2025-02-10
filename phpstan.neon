@@ -1,0 +1,19 @@
+includes:
+	- phpstan-baseline.neon
+
+parameters:
+	level: 5
+
+	paths:
+		- app
+		- config
+		- bootstrap
+		- database/factories
+		- database/seeders
+		- routes
+
+	ignoreErrors:
+	    -
+	        message: '#^Undefined variable: \$this$#'
+	        paths:
+	            - routes/console.php

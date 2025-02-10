@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Actions\Auth\ResetPasswordAction;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Volt\Component;
@@ -18,20 +22,17 @@ new #[Layout('layouts.guest')] class extends Component
     public string $password = '';
     public string $password_confirmation = '';
 
-    /**
-     * Mount the component.
-     */
     public function mount(string $token): void
     {
         $this->token = $token;
 
-        $this->email = request()->string('email');
+        $this->email = request()->string('email')->toString();
     }
 
     /**
      * Reset the password for the given user.
      */
-    public function resetPassword(): void
+    public function resetPassword(ResetPasswordAction $resetPassword): void
     {
         $this->validate([
             'token' => ['required'],
@@ -39,28 +40,12 @@ new #[Layout('layouts.guest')] class extends Component
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
-            $this->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) {
-                $user->forceFill([
-                    'password' => Hash::make($this->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
-
-                event(new PasswordReset($user));
-            }
-        );
-
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        if ($status != Password::PASSWORD_RESET) {
-            $this->addError('email', __($status));
-
-            return;
+        try {
+            $status = $resetPassword->execute(
+                $this->only('email', 'password', 'password_confirmation', 'token'),
+            );
+        } catch (ValidationException $e) {
+            $this->addError('email', __($e->getMessage()));
         }
 
         Session::flash('status', __($status));
@@ -69,37 +54,49 @@ new #[Layout('layouts.guest')] class extends Component
     }
 }; ?>
 
-<div>
-    <form wire:submit="resetPassword">
-        <!-- Email Address -->
+<flux:card>
+    <form wire:submit="resetPassword" class="space-y-6">
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <flux:heading size="lg">{{ __('Reset your password') }}</flux:heading>
+            <flux:subheading>{{ __('Enter your new password') }}</flux:subheading>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="space-y-6">
+            <flux:input
+                wire:model="email"
+                label="{{ __('Email') }}"
+                type="email"
+                placeholder="{{ __('Your email address') }}"
+                required
+                viewable
+                autofocus
+            />
+            <flux:input
+                wire:model="password"
+                label="{{ __('New Password') }}"
+                type="password"
+                placeholder="{{ __('Your new password') }}"
+                required
+                viewable
+            />
+            <flux:input
+                wire:model="password_confirmation"
+                label="{{ __('Confirm Password') }}"
+                type="password"
+                placeholder="{{ __('Confirm your new password') }}"
+                required
+                viewable
+            />
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                          type="password"
-                          name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
+        <div class="space-y-2">
+            <flux:button variant="primary" class="w-full" type="submit">
                 {{ __('Reset Password') }}
-            </x-primary-button>
+            </flux:button>
+
+            <flux:button variant="ghost" class="w-full" href="{{ route('login') }}" wire:navigate>
+                {{ __('Back to login') }}
+            </flux:button>
         </div>
     </form>
-</div>
+</flux:card>
