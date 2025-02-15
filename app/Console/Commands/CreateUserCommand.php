@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Actions\User\CreateUserAction;
-use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 use function Laravel\Prompts\form;
@@ -28,15 +26,21 @@ final class CreateUserCommand extends Command
     {
         $data = form()
             ->text(
-                label: 'What is your name?',
+                label: 'What is your first name?',
                 required: true,
-                validate: ['required', 'string', 'max:255'],
-                name: 'name',
+                validate: ['required', 'string', 'max:50'],
+                name: 'first_name',
+            )
+            ->text(
+                label: 'What is your last name?',
+                required: true,
+                validate: ['required', 'string', 'max:50'],
+                name: 'last_name',
             )
             ->text(
                 label: 'What is your email?',
                 required: true,
-                validate: ['required', 'string', 'email', 'max:255', Rule::unique(User::class, 'email')],
+                validate: ['required', 'string', 'email', 'max:255', 'unique:users,email'],
                 name: 'email',
             )
             ->password(
@@ -47,6 +51,8 @@ final class CreateUserCommand extends Command
                 name: 'password',
             )
             ->submit();
+
+        $data['email_verified_at'] = now();
 
         $user = $this->createUserAction->execute($data);
 

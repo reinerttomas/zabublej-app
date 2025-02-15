@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Actions\Auth;
 
+use App\Support\Facades\Auth;
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -35,6 +35,11 @@ final readonly class LoginByEmailAndPasswordAction
         }
 
         RateLimiter::clear($this->throttleKey($email));
+
+        // Update the user's last login timestamp.
+        Auth::userOrFail()->update([
+            'last_login_at' => now(),
+        ]);
     }
 
     /**

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Enums;
+namespace App\Livewire;
 
-enum LivewireEvent: string
+enum Event: string
 {
     case ProfileInformationUpdated = 'profile-information-updated';
 }

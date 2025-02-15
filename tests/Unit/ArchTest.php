@@ -5,7 +5,9 @@ declare(strict_types=1);
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 arch()->preset()->php();
-arch()->preset()->laravel();
+arch()->preset()->laravel()->ignoring([
+    'App\Livewire',
+]);
 arch()->preset()->security();
 
 arch('controllers')
@@ -17,6 +19,7 @@ arch('avoid mutation')
     ->classes()
     ->toBeReadonly()
     ->ignoring([
+        'App\Builders',
         'App\Console\Commands',
         'App\Livewire\Forms',
         'App\Models',
@@ -31,6 +34,7 @@ arch('avoid inheritance')
     ->classes()
     ->toExtendNothing()
     ->ignoring([
+        'App\Builders',
         'App\Console\Commands',
         'App\Livewire\Forms',
         'App\Models',
@@ -62,6 +66,7 @@ arch('models')
     ->toHaveMethod('casts')
     ->toOnlyBeUsedIn([
         'App\Actions',
+        'App\Builders',
         'App\Console\Commands',
         'App\Models',
         'App\Notifications',

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\Auth\SendVerificationEmailAction;
 use App\Actions\Profile\UpdateProfileInformationAction;
-use App\Enums\LivewireEvent;
+use App\Livewire\Event;
 use App\Models\User;
 use App\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -13,12 +13,14 @@ use Livewire\Volt\Component;
 
 new class extends Component
 {
-    public string $name = '';
+    public string $first_name = '';
+    public string $last_name = '';
     public string $email = '';
 
     public function mount(): void
     {
-        $this->name = Auth::userOrFail()->name;
+        $this->first_name = Auth::userOrFail()->first_name;
+        $this->last_name = Auth::userOrFail()->last_name;
         $this->email = Auth::userOrFail()->email;
     }
 
@@ -27,13 +29,14 @@ new class extends Component
         $user = Auth::userOrFail();
 
         $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:50'],
+            'last_name' => ['required', 'string', 'max:50'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
         ]);
 
         $updateProfileInformation->execute($user, $validated);
 
-        $this->dispatch(LivewireEvent::ProfileInformationUpdated, name: $user->name);
+        $this->dispatch(Event::ProfileInformationUpdated);
 
         Flux::toast('Profile updated successfully.', variant: 'success');
     }
@@ -64,13 +67,24 @@ new class extends Component
     </div>
 
     <div class="space-y-6">
-        <flux:input
-            wire:model="name"
-            label="{{ __('Name') }}"
-            type="text"
-            placeholder="{{ __('Your name') }}"
-            required
-        />
+        <div class="grid gap-4 sm:grid-cols-2">
+            <flux:input
+                wire:model="first_name"
+                label="{{ __('First Name') }}"
+                type="text"
+                placeholder="{{ __('Your first name') }}"
+                required
+                autofocus
+            />
+
+            <flux:input
+                wire:model="last_name"
+                label="{{ __('Last Name') }}"
+                type="text"
+                placeholder="{{ __('Your last name') }}"
+                required
+            />
+        </div>
 
         <flux:input
             wire:model="email"

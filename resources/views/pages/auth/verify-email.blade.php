@@ -35,7 +35,7 @@ new #[Layout('layouts.guest')] class extends Component
      */
     public function logout(LogoutAction $logout): void
     {
-        $logout();
+        $logout->execute();
 
         $this->redirect('/', navigate: true);
     }

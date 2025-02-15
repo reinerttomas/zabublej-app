@@ -5,21 +5,21 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Volt::route('profile', 'pages.profile')
+Volt::route('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
-    Volt::route('/', 'pages.dashboard')
+    Volt::route('/', 'dashboard')
         ->name('dashboard');
 
-    Volt::route('users', 'pages.users.index')
+    Volt::route('users', 'users.index')
         ->name('users.index');
 
-    Volt::route('events', 'pages.events.index')
+    Volt::route('events', 'events.index')
         ->name('events.index');
 
-    Volt::route('settings', 'pages.settings')
+    Volt::route('settings', 'settings')
         ->middleware('password.confirm')
         ->name('settings');
 });

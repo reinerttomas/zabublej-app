@@ -10,6 +10,7 @@ parameters:
 		- bootstrap
 		- database/factories
 		- database/seeders
+		- resources/views
 		- routes
 
 	ignoreErrors:
@@ -17,3 +18,11 @@ parameters:
 	        message: '#^Undefined variable: \$this$#'
 	        paths:
 	            - routes/console.php
+	    -
+	        message: '#Expression "new class extends \\Livewire\\Volt\\Component…" on a separate line does not do anything.#'
+	        paths:
+	            - resources/views
+	    -
+	        message: '#Expression "new \#\[\\Livewire\\Attributes\\Layout\(.*\)\] class extends \\Livewire\\Volt\\Component…" on a separate line does not do anything.#'
+	        paths:
+	            - resources/views

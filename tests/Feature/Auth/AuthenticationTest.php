@@ -5,18 +5,22 @@ declare(strict_types=1);
 use App\Models\User;
 use Livewire\Volt\Volt;
 
+use function Pest\Laravel\assertAuthenticated;
+
 test('login screen can be rendered', function (): void {
     $response = $this->get('/login');
 
     $response
         ->assertOk()
-        ->assertSeeVolt('pages.auth.login');
+        ->assertSeeVolt('auth.login');
 });
 
 test('users can authenticate using the login screen', function (): void {
-    $user = User::factory()->create();
+    $user = User::factory()->notLoginYet()->create();
 
-    $component = Volt::test('pages.auth.login')
+    expect($user->last_login_at)->toBeNull();
+
+    $component = Volt::test('auth.login')
         ->set('email', $user->email)
         ->set('password', 'password');
 
@@ -26,13 +30,17 @@ test('users can authenticate using the login screen', function (): void {
         ->assertHasNoErrors()
         ->assertRedirect(route('dashboard', absolute: false));
 
-    $this->assertAuthenticated();
+    assertAuthenticated();
+
+    $user->refresh();
+
+    expect($user->last_login_at)->not()->toBeNull();
 });
 
 test('users can not authenticate with invalid password', function (): void {
     $user = User::factory()->create();
 
-    $component = Volt::test('pages.auth.login')
+    $component = Volt::test('auth.login')
         ->set('email', $user->email)
         ->set('password', 'wrong-password');
 

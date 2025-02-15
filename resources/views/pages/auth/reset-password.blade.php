@@ -46,6 +46,8 @@ new #[Layout('layouts.guest')] class extends Component
             );
         } catch (ValidationException $e) {
             $this->addError('email', __($e->getMessage()));
+
+            return;
         }
 
         Session::flash('status', __($status));

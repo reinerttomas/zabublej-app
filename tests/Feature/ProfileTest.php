@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Models\User;
 use Livewire\Volt\Volt;
 
+use function Pest\Laravel\assertGuest;
+
 test('profile page is displayed', function (): void {
     $user = User::factory()->create();
 
@@ -25,7 +27,8 @@ test('profile information can be updated', function (): void {
     $this->actingAs($user);
 
     $component = Volt::test('profile.update-profile-information-form')
-        ->set('name', 'Test User')
+        ->set('first_name', 'Test')
+        ->set('last_name', 'User')
         ->set('email', 'test@example.com')
         ->call('updateProfileInformation');
 
@@ -35,7 +38,8 @@ test('profile information can be updated', function (): void {
 
     $user->refresh();
 
-    $this->assertSame('Test User', $user->name);
+    $this->assertSame('Test', $user->first_name);
+    $this->assertSame('User', $user->last_name);
     $this->assertSame('test@example.com', $user->email);
     $this->assertNull($user->email_verified_at);
 });
@@ -46,7 +50,8 @@ test('email verification status is unchanged when the email address is unchanged
     $this->actingAs($user);
 
     $component = Volt::test('profile.update-profile-information-form')
-        ->set('name', 'Test User')
+        ->set('first_name', 'Test')
+        ->set('last_name', 'User')
         ->set('email', $user->email)
         ->call('updateProfileInformation');
 
@@ -70,8 +75,11 @@ test('user can delete their account', function (): void {
         ->assertHasNoErrors()
         ->assertRedirect('/');
 
-    $this->assertGuest();
-    $this->assertNull($user->fresh());
+    assertGuest();
+
+    expect($user->fresh())
+        ->not->toBeNull()
+        ->and($user->deleted_at)->not->toBeNull();
 });
 
 test('correct password must be provided to delete account', function (): void {

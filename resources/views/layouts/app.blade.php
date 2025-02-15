@@ -1,7 +1,7 @@
 <?php
 
 use App\Actions\Auth\LogoutAction;
-use App\Enums\LivewireEvent;
+use App\Livewire\Event;
 use App\Models\User;
 use App\Support\Facades\Auth;
 use Livewire\Attributes\Locked;
@@ -25,7 +25,7 @@ new class extends Component
         $this->redirectRoute('login', navigate: true);
     }
 
-    #[On(LivewireEvent::ProfileInformationUpdated->value)]
+    #[On(Event::ProfileInformationUpdated->value)]
     public function refreshProfile(): void
     {
         $this->user = Auth::userOrFail();
@@ -116,7 +116,7 @@ new class extends Component
 
             @volt('layout.sidebar.profile.dropdown')
                 <flux:dropdown position="top" align="start" class="max-lg:hidden">
-                    <flux:profile name="{{ $user->name }}" />
+                    <flux:profile name="{{ $user->first_name }} {{ $user->last_name }}" />
 
                     <flux:menu>
                         <flux:navmenu.item href="{{ route('profile') }}" wire:navigate icon="user">
