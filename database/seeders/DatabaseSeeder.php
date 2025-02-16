@@ -18,6 +18,9 @@ final class DatabaseSeeder extends Seeder
             'email' => 'reinerttomas@gmail.com',
         ]);
 
-        User::factory()->count(50)->create();
+        $this->call([
+            UserSeeder::class,
+            EventSeeder::class,
+        ]);
     }
 }

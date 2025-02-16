@@ -7,7 +7,7 @@ use Livewire\Volt\Volt;
 
 use function Pest\Laravel\assertGuest;
 
-test('profile page is displayed', function (): void {
+it('can show profile page', function (): void {
     $user = User::factory()->create();
 
     $this->actingAs($user);

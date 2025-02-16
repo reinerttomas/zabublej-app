@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Builders\UserBuilder;
+use App\Builders\EventBuilder;
 use App\Livewire\WithPagination;
 use App\Livewire\WithSearching;
 use App\Livewire\WithSorting;
-use App\Models\User;
+use App\Models\Event;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -18,13 +18,13 @@ new #[Layout('layouts.app')] class extends Component
     use WithSearching;
     use WithSorting;
 
-    public User $user;
+    public Event $event;
 
     #[Computed]
-    public function users(): LengthAwarePaginator
+    public function events(): LengthAwarePaginator
     {
-        return User::query()
-            ->when($this->canSearching(), function (UserBuilder $query): void {
+        return Event::query()
+            ->when($this->canSearching(), function (EventBuilder $query): void {
                 $query->search($this->search);
             })
             ->orderByDirection($this->sortBy, $this->sortDirection)
@@ -33,7 +33,7 @@ new #[Layout('layouts.app')] class extends Component
 
     public function delete(int $id): void
     {
-        User::findOrFail($id)->delete();
+        Event::findOrFail($id)->delete();
     }
 }; ?>
 
@@ -50,32 +50,32 @@ new #[Layout('layouts.app')] class extends Component
         <x-per-page :per-page="$perPage" />
     </div>
 
-    <flux:table :paginate="$this->users">
+    <flux:table :paginate="$this->events">
         <flux:columns>
             <flux:column
                 sortable
-                :sorted="$sortBy === 'last_name'"
+                :sorted="$sortBy === 'name'"
                 :direction="$sortDirection->value"
-                wire:click="sort('last_name')"
+                wire:click="sort('name')"
             >
                 {{ __('Name') }}
             </flux:column>
+            <flux:column>{{ __('Location') }}</flux:column>
             <flux:column
                 sortable
-                :sorted="$sortBy === 'email'"
+                :sorted="$sortBy === 'start_at'"
                 :direction="$sortDirection->value"
-                wire:click="sort('email')"
+                wire:click="sort('start_at')"
             >
-                {{ __('Email') }}
+                {{ __('Start at') }}
             </flux:column>
-            <flux:column>{{ __('Phone') }}</flux:column>
-            <flux:column>{{ __('Last login at') }}</flux:column>
+            <flux:column>{{ __('Estimated') }}</flux:column>
             <flux:column>{{ __('Status') }}</flux:column>
         </flux:columns>
 
         <flux:rows>
-            @foreach ($this->users as $user)
-                <livewire:users.table-row :user="$user" :key="$user->id" />
+            @foreach ($this->events as $event)
+                <livewire:events.table-row :event="$event" :key="$event->id" />
             @endforeach
         </flux:rows>
     </flux:table>

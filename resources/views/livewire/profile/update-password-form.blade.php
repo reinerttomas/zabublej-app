@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\Auth\UpdatePasswordAction;
-use App\Livewire\Event;
+use App\Livewire\EventName;
 use App\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;

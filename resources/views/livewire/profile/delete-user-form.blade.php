@@ -2,7 +2,7 @@
 
 use App\Actions\Auth\LogoutAction;
 use App\Actions\User\DeleteUserAction;
-use App\Livewire\Modal;
+use App\Livewire\DialogName;
 use App\Support\Facades\Auth;
 use Livewire\Volt\Component;
 
@@ -33,11 +33,11 @@ new class extends Component
         </flux:subheading>
     </div>
 
-    <flux:modal.trigger name="{{ Modal::UserDelete }}">
+    <flux:modal.trigger name="{{ DialogName::UserDelete }}">
         <flux:button variant="danger" class="mt-4">{{ __('Delete Account') }}</flux:button>
     </flux:modal.trigger>
 
-    <flux:modal name="{{ Modal::UserDelete }}" class="min-w-[22rem] space-y-6">
+    <flux:modal name="{{ DialogName::UserDelete }}" class="min-w-[22rem] space-y-6">
         <form wire:submit="deleteUser">
             <div>
                 <flux:heading size="lg">{{ __('Are you sure you want to delete your account?') }}</flux:heading>

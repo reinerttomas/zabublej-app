@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\User\UpdateUserAction;
-use App\Livewire\Modal;
+use App\Livewire\DialogName;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
@@ -28,9 +28,14 @@ new #[Layout('layouts.app')] class extends Component
         $this->phone = $this->user->phone;
     }
 
-    public function edit(): void
+    public function showDialogUpdate(): void
     {
-        $this->modal(Modal::UserUpdate)->show();
+        $this->modal(DialogName::UserUpdate)->show();
+    }
+
+    public function showDialogDelete(): void
+    {
+        $this->modal(DialogName::UserDelete)->show();
     }
 
     public function update(UpdateUserAction $updateUser): void
@@ -50,12 +55,7 @@ new #[Layout('layouts.app')] class extends Component
 
         Flux::toast(sprintf('User %s has been updated.', $this->user->email), variant: 'success');
 
-        $this->modal(Modal::UserUpdate)->close();
-    }
-
-    public function remove(): void
-    {
-        $this->modal(Modal::UserDelete)->show();
+        $this->modal(DialogName::UserUpdate)->close();
     }
 }; ?>
 
@@ -76,12 +76,14 @@ new #[Layout('layouts.app')] class extends Component
             <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
             <flux:menu>
-                <flux:menu.item wire:click="edit" icon="pencil">{{ __('Edit') }}</flux:menu.item>
-                <flux:menu.item wire:click="remove" icon="trash" variant="danger">{{ __('Remove') }}</flux:menu.item>
+                <flux:menu.item wire:click="showDialogUpdate" icon="pencil">{{ __('Edit') }}</flux:menu.item>
+                <flux:menu.item wire:click="showDialogDelete" icon="trash" variant="danger">
+                    {{ __('Delete') }}
+                </flux:menu.item>
             </flux:menu>
         </flux:dropdown>
 
-        <flux:modal name="{{ Modal::UserUpdate }}" variant="flyout" class="">
+        <flux:modal name="{{ DialogName::UserUpdate }}" variant="flyout" class="">
             <form wire:submit="update" class="space-y-6">
                 <div>
                     <flux:heading size="lg">{{ __('Edit user') }}</flux:heading>
@@ -105,14 +107,13 @@ new #[Layout('layouts.app')] class extends Component
             </form>
         </flux:modal>
 
-        <flux:modal name="{{ Modal::UserDelete }}" class="min-w-[22rem]">
+        <flux:modal name="{{ DialogName::UserDelete }}" class="min-w-[22rem]">
             <form class="space-y-6" wire:submit="$parent.delete({{ $user->id }})">
                 <div>
                     <flux:heading size="lg">{{ __('Delete user?') }}</flux:heading>
 
                     <flux:subheading>
                         <p>{{ __("You're about to delete this user.") }}</p>
-                        <p>{{ __('This action cannot be reversed.') }}</p>
                     </flux:subheading>
                 </div>
 

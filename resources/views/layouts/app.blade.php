@@ -1,7 +1,7 @@
 <?php
 
 use App\Actions\Auth\LogoutAction;
-use App\Livewire\Event;
+use App\Livewire\EventName;
 use App\Models\User;
 use App\Support\Facades\Auth;
 use Livewire\Attributes\Locked;
@@ -25,7 +25,7 @@ new class extends Component
         $this->redirectRoute('login', navigate: true);
     }
 
-    #[On(Event::ProfileInformationUpdated->value)]
+    #[On(EventName::ProfileInformationUpdated->value)]
     public function refreshProfile(): void
     {
         $this->user = Auth::userOrFail();

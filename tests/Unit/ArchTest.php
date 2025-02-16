@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Builders\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 arch()->preset()->php();
@@ -47,11 +48,17 @@ arch('avoid inheritance')
 arch('avoid open for extension')
     ->expect('App')
     ->classes()
-    ->toBeFinal();
+    ->toBeFinal()
+    ->ignoring([
+        Builder::class,
+    ]);
 
 arch('avoid abstraction')
     ->expect('App')
-    ->not->toBeAbstract();
+    ->not->toBeAbstract()
+    ->ignoring([
+        Builder::class,
+    ]);
 
 arch('factories')
     ->expect('Database\Factories')
