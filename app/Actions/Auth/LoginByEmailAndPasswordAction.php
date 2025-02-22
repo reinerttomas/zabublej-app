@@ -15,7 +15,7 @@ final readonly class LoginByEmailAndPasswordAction
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function execute(string $email, string $password, bool $remember): void
     {

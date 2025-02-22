@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth as LaravelAuth;
 final class Auth extends LaravelAuth
 {
     /**
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws AuthenticationException
      */
     public static function userOrFail(): User
     {

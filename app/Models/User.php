@@ -28,6 +28,31 @@ final class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
+    }
+
+    /**
+     * @return BelongsToMany<Event, $this>
+     */
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class)
+            ->withPivot('worked_hours')
+            ->withTimestamps();
+    }
+
+    /**
+     * @return Attribute<string, never>
+     */
+    public function fullname(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => $this->last_name . ', ' . $this->first_name,
+        );
+    }
+
     /**
      * @return array<string, string>
      */
@@ -41,30 +66,5 @@ final class User extends Authenticatable implements MustVerifyEmail
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    }
-
-    public function newEloquentBuilder($query): UserBuilder
-    {
-        return new UserBuilder($query);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Event, $this>
-     */
-    public function events(): BelongsToMany
-    {
-        return $this->belongsToMany(Event::class)
-            ->withPivot('worked_hours')
-            ->withTimestamps();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute<string, never>
-     */
-    public function fullname(): Attribute
-    {
-        return Attribute::make(
-            get: fn (): string => $this->last_name . ', ' . $this->first_name,
-        );
     }
 }

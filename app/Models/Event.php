@@ -19,6 +19,21 @@ final class Event extends Model
         'status' => EventStatus::Draft,
     ];
 
+    public function newEloquentBuilder($query): EventBuilder
+    {
+        return new EventBuilder($query);
+    }
+
+    /**
+     * @return BelongsToMany<User, $this>
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('worked_hours')
+            ->withTimestamps();
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -28,20 +43,5 @@ final class Event extends Model
             'status' => EventStatus::class,
             'start_at' => 'datetime',
         ];
-    }
-
-    public function newEloquentBuilder($query): EventBuilder
-    {
-        return new EventBuilder($query);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\User, $this>
-     */
-    public function users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class)
-            ->withPivot('worked_hours')
-            ->withTimestamps();
     }
 }

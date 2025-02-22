@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
  */
 abstract class Builder extends EloquentBuilder
 {
-    public function orderByDirection(string $sortBy, SortDirection $direction = SortDirection::ASC): self
+    final public function orderByDirection(string $sortBy, SortDirection $direction = SortDirection::ASC): self
     {
         return $this->orderBy($sortBy, $direction->value);
     }
