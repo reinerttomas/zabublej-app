@@ -47,7 +47,7 @@ new class extends Component
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @fluxStyles
+        @fluxAppearance
     </head>
     <body class="min-h-screen bg-white antialiased dark:bg-zinc-800">
         <!-- Page Heading -->

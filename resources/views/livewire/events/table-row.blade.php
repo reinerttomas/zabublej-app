@@ -20,17 +20,17 @@ new #[Layout('layouts.app')] class extends Component
     }
 }; ?>
 
-<flux:row>
-    <flux:cell>{{ $event->name }}</flux:cell>
-    <flux:cell>{{ $event->location }}</flux:cell>
-    <flux:cell>{{ $event->start_at?->toHuman() }}</flux:cell>
-    <flux:cell>{{ $event->estimated_hours }}</flux:cell>
-    <flux:cell>
+<flux:table.row>
+    <flux:table.cell>{{ $event->name }}</flux:table.cell>
+    <flux:table.cell>{{ $event->location }}</flux:table.cell>
+    <flux:table.cell>{{ $event->start_at?->toHuman() }}</flux:table.cell>
+    <flux:table.cell>{{ $event->estimated_hours }}</flux:table.cell>
+    <flux:table.cell>
         <flux:badge color="{{ $event->status->badge() }}" size="sm">
             {{ $event->status->label() }}
         </flux:badge>
-    </flux:cell>
-    <flux:cell>
+    </flux:table.cell>
+    <flux:table.cell>
         <flux:dropdown>
             <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
@@ -65,5 +65,5 @@ new #[Layout('layouts.app')] class extends Component
                 </div>
             </form>
         </flux:modal>
-    </flux:cell>
-</flux:row>
+    </flux:table.cell>
+</flux:table.row>

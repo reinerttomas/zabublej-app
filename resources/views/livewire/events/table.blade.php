@@ -51,32 +51,32 @@ new #[Layout('layouts.app')] class extends Component
     </div>
 
     <flux:table :paginate="$this->events">
-        <flux:columns>
-            <flux:column
+        <flux:table.columns>
+            <flux:table.column
                 sortable
                 :sorted="$sortBy === 'name'"
                 :direction="$sortDirection->value"
                 wire:click="sort('name')"
             >
                 {{ __('Name') }}
-            </flux:column>
-            <flux:column>{{ __('Location') }}</flux:column>
-            <flux:column
+            </flux:table.column>
+            <flux:table.column>{{ __('Location') }}</flux:table.column>
+            <flux:table.column
                 sortable
                 :sorted="$sortBy === 'start_at'"
                 :direction="$sortDirection->value"
                 wire:click="sort('start_at')"
             >
                 {{ __('Start at') }}
-            </flux:column>
-            <flux:column>{{ __('Estimated') }}</flux:column>
-            <flux:column>{{ __('Status') }}</flux:column>
-        </flux:columns>
+            </flux:table.column>
+            <flux:table.column>{{ __('Estimated') }}</flux:table.column>
+            <flux:table.column>{{ __('Status') }}</flux:table.column>
+        </flux:table.columns>
 
-        <flux:rows>
+        <flux:table.rows>
             @foreach ($this->events as $event)
                 <livewire:events.table-row :event="$event" :key="$event->id" />
             @endforeach
-        </flux:rows>
+        </flux:table.rows>
     </flux:table>
 </div>

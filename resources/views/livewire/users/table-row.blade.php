@@ -59,19 +59,19 @@ new #[Layout('layouts.app')] class extends Component
     }
 }; ?>
 
-<flux:row>
-    <flux:cell>{{ $user->fullname }}</flux:cell>
-    <flux:cell>{{ $user->email }}</flux:cell>
-    <flux:cell>{{ $user->phone }}</flux:cell>
-    <flux:cell>{{ $user->last_login_at?->toHuman() }}</flux:cell>
-    <flux:cell>
+<flux:table.row>
+    <flux:table.cell>{{ $user->fullname }}</flux:table.cell>
+    <flux:table.cell>{{ $user->email }}</flux:table.cell>
+    <flux:table.cell>{{ $user->phone }}</flux:table.cell>
+    <flux:table.cell>{{ $user->last_login_at?->toHuman() }}</flux:table.cell>
+    <flux:table.cell>
         @if ($user->deleted_at)
             <flux:badge color="red" size="sm">{{ __('Inactive') }}</flux:badge>
         @else
             <flux:badge color="lime" size="sm">{{ __('Active') }}</flux:badge>
         @endif
-    </flux:cell>
-    <flux:cell>
+    </flux:table.cell>
+    <flux:table.cell>
         <flux:dropdown>
             <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
@@ -128,5 +128,5 @@ new #[Layout('layouts.app')] class extends Component
                 </div>
             </form>
         </flux:modal>
-    </flux:cell>
-</flux:row>
+    </flux:table.cell>
+</flux:table.row>

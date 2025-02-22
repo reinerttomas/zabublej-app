@@ -79,7 +79,7 @@ new class extends Component
             wire:change="assign"
         >
             @foreach ($this->users as $user)
-                <flux:option :value="$user->id">{{ $user->fullname }}</flux:option>
+                <flux:select.option :value="$user->id">{{ $user->fullname }}</flux:select.option>
             @endforeach
         </flux:select>
     </form>

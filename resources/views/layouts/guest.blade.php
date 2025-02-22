@@ -13,7 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @fluxStyles
+        @fluxAppearance
     </head>
 
     <body class="m-auto flex min-h-screen max-w-md items-center justify-center bg-white antialiased dark:bg-zinc-800">
