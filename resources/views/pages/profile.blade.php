@@ -18,23 +18,21 @@ new #[Layout('layouts.app')] class extends Component
 
     <flux:separator variant="subtle" />
 
-    <div class="space-y-6">
-        <flux:card>
-            <div class="max-w-xl">
-                <livewire:profile.update-profile-information-form />
-            </div>
-        </flux:card>
+    <flux:card>
+        <div class="max-w-xl">
+            <livewire:profile.update-profile-information-form />
+        </div>
+    </flux:card>
 
-        <flux:card>
-            <div class="max-w-xl">
-                <livewire:profile.update-password-form />
-            </div>
-        </flux:card>
+    <flux:card>
+        <div class="max-w-xl">
+            <livewire:profile.update-password-form />
+        </div>
+    </flux:card>
 
-        <flux:card>
-            <div class="max-w-xl">
-                <livewire:profile.delete-user-form />
-            </div>
-        </flux:card>
-    </div>
+    <flux:card>
+        <div class="max-w-xl">
+            <livewire:profile.delete-user-form />
+        </div>
+    </flux:card>
 </div>

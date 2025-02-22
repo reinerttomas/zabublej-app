@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\Auth\SendVerificationEmailAction;
 use App\Actions\Profile\UpdateProfileInformationAction;
-use App\Livewire\EventName;
+use App\Livewire\LivewireEvent;
 use App\Models\User;
 use App\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -36,7 +36,7 @@ new class extends Component
 
         $updateProfileInformation->execute($user, $validated);
 
-        $this->dispatch(EventName::ProfileInformationUpdated);
+        $this->dispatch(LivewireEvent::ProfileInformationUpdated);
 
         Flux::toast('Profile updated successfully.', variant: 'success');
     }

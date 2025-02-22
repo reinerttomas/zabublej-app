@@ -5,3 +5,15 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Cannot call method format\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: resources/views/livewire/events/update-event-form.blade.php
+
+		-
+			message: '#^Property Livewire\\Volt\\Component@anonymous/resources/views/livewire/events/update\-status\-form\.blade\.php\:11\:\:\$status \(App\\Enums\\EventStatus\) does not accept int\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: resources/views/livewire/events/update-status-form.blade.php

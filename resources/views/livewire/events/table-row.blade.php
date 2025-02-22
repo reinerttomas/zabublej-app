@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\User\UpdateUserAction;
+use App\Actions\Users\UpdateUserAction;
 use App\Livewire\DialogName;
 use App\Models\Event;
 use Illuminate\Validation\Rule;
@@ -26,7 +26,7 @@ new #[Layout('layouts.app')] class extends Component
     <flux:cell>{{ $event->start_at?->toHuman() }}</flux:cell>
     <flux:cell>{{ $event->estimated_hours }}</flux:cell>
     <flux:cell>
-        <flux:badge as="button" color="{{ $event->status->color() }}" size="sm">
+        <flux:badge color="{{ $event->status->badge() }}" size="sm">
             {{ $event->status->label() }}
         </flux:badge>
     </flux:cell>
@@ -35,7 +35,9 @@ new #[Layout('layouts.app')] class extends Component
             <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
             <flux:menu>
-                <flux:menu.item icon="pencil">{{ __('Edit') }}</flux:menu.item>
+                <flux:menu.item href="{{ route('events.update', $event) }}" icon="pencil" wire:navigate>
+                    {{ __('Edit') }}
+                </flux:menu.item>
                 <flux:menu.item wire:click="showDialogDelete" icon="trash" variant="danger">
                     {{ __('Delete') }}
                 </flux:menu.item>

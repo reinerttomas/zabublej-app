@@ -12,6 +12,7 @@ it('can create user', function (array $data): void {
         ->expectsQuestion('What is your last name?', $data['last_name'])
         ->expectsQuestion('What is your email?', $data['email'])
         ->expectsQuestion('What is your password?', $data['password'])
+        ->expectsOutput(sprintf('User "%s" created successfully.', $data['email']))
         ->assertExitCode(0);
 
     assertDatabaseHas('users', [

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\User\UpdateUserAction;
+use App\Actions\Users\UpdateUserAction;
 use App\Livewire\DialogName;
 use App\Models\User;
 use Illuminate\Validation\Rule;

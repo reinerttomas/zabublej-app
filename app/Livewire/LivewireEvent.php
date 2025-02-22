@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-enum EventName: string
+enum LivewireEvent: string
 {
+    case ToastShow = 'toast-show';
+
     case ProfileInformationUpdated = 'profile-information-updated';
 }

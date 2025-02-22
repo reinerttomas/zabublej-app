@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Actions\User\CreateUserAction;
+use App\Actions\Users\CreateUserAction;
 use Illuminate\Console\Command;
 use Illuminate\Validation\Rules\Password;
 
@@ -56,6 +56,6 @@ final class CreateUserCommand extends Command
 
         $user = $this->createUserAction->execute($data);
 
-        info(sprintf('User "%s" created successfully.', $user->email));
+        $this->info(sprintf('User "%s" created successfully.', $user->email));
     }
 }

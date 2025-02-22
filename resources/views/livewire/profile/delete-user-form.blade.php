@@ -1,7 +1,7 @@
 <?php
 
 use App\Actions\Auth\LogoutAction;
-use App\Actions\User\DeleteUserAction;
+use App\Actions\Users\DeleteUserAction;
 use App\Livewire\DialogName;
 use App\Support\Facades\Auth;
 use Livewire\Volt\Component;

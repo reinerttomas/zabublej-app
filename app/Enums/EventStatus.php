@@ -21,13 +21,28 @@ enum EventStatus: int
         };
     }
 
-    public function color(): string
+    public function badge(): string
     {
         return match ($this) {
             self::Draft => 'gray',
-            self::Published => 'green',
+            self::Published => 'yellow',
             self::Cancelled => 'red',
-            self::Completed => 'blue',
+            self::Completed => 'green',
         };
+    }
+
+    public function color(): string
+    {
+        return match ($this) {
+            self::Draft => 'bg-zinc-600 dark:bg-zinc-600',
+            self::Published => 'bg-yellow-500 dark:bg-yellow-400',
+            self::Cancelled => 'bg-red-500 dark:bg-red-600',
+            self::Completed => 'bg-green-500 dark:bg-green-600',
+        };
+    }
+
+    public function isEqual(EventStatus $status): bool
+    {
+        return $this->value === $status->value;
     }
 }
