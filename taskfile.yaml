@@ -1,0 +1,54 @@
+version: '3'
+
+tasks:
+  up:
+    cmds:
+      - docker compose up -d
+
+  down:
+    cmds:
+      - docker compose down
+
+  rector:
+    cmds:
+      - vendor/bin/rector --dry-run
+
+  rector:fix:
+    cmds:
+      - vendor/bin/rector
+
+  phpstan:
+    cmds:
+      - vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G
+
+  phpstan:baseline:
+    cmds:
+      - vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G --generate-baseline
+
+  pint:
+    cmds:
+      - vendor/bin/pint --config pint.json -v --test
+
+  pint:fix:
+    cmds:
+      - vendor/bin/pint --config pint.json
+
+  test:
+    cmds:
+      - php artisan test {{.CLI_ARGS}}
+
+  check:
+    cmds:
+      - task: rector
+      - task: phpstan
+      - task: pint
+      - task: test
+
+  fix:
+    cmds:
+      - task: rector:fix
+      - task: pint:fix
+
+  solo:
+    cmds:
+      - php artisan solo

@@ -1,0 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+it('example', function (): void {
+    // Arrange
+
+    // Act & Assert
+    $this->get('/')
+        ->assertStatus(200);
+});

@@ -1,0 +1,32 @@
+includes:
+	- phpstan-baseline.neon
+
+parameters:
+	level: 5
+
+	paths:
+		- app
+		- config
+		- bootstrap
+		- database/factories
+		- database/seeders
+		- resources/views
+		- routes
+
+	ignoreErrors:
+	    -
+	        message: '#^Undefined variable: \$this$#'
+	        paths:
+	            - routes/console.php
+	    -
+	        message: '#Expression "new class extends \\Livewire\\Volt\\Component…" on a separate line does not do anything.#'
+	        paths:
+	            - resources/views
+	    -
+	        message: '#Expression "new \#\[\\Livewire\\Attributes\\Layout\(.*\)\] class extends \\Livewire\\Volt\\Component…" on a separate line does not do anything.#'
+	        paths:
+	            - resources/views
+	    -
+	        message: '#Variable \$.* might not be defined.#'
+	        paths:
+	            - resources/views/flux
