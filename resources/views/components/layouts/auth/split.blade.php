@@ -12,7 +12,7 @@
             >
                 <div class="absolute inset-0 bg-neutral-900"></div>
                 <a
-                    href="{{ route('home') }}"
+                    href="#"
                     class="relative z-20 flex items-center text-lg font-medium"
                     wire:navigate
                 >
@@ -36,7 +36,7 @@
             <div class="w-full lg:p-8">
                 <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                     <a
-                        href="{{ route('home') }}"
+                        href="#"
                         class="z-20 flex flex-col items-center gap-2 font-medium lg:hidden"
                         wire:navigate
                     >
