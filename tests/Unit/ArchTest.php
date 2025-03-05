@@ -63,6 +63,8 @@ arch('models')
     ->expect('App\Models')
     ->toHaveMethod('casts')
     ->toOnlyBeUsedIn([
+        'App\Builders',
+        'App\Events',
         'App\Models',
         'App\Notifications',
         'App\Observers',

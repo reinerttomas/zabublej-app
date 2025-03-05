@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Events\Login;
+use App\Support\Facades\Auth;
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -39,6 +42,8 @@ new #[Layout('components.layouts.auth')] class extends Component
 
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
+
+        event(new Login(Auth::userOrFail()));
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
