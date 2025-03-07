@@ -11,3 +11,9 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$role of method Database\\Seeders\\RoleAndPermissionSeeder\:\:syncPermissionsToRole\(\) expects Spatie\\Permission\\Models\\Role, Spatie\\Permission\\Contracts\\Role given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/seeders/RoleAndPermissionSeeder.php

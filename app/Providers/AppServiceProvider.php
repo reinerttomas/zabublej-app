@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Enums\Role;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 final class AppServiceProvider extends ServiceProvider
@@ -29,6 +31,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureCommands();
         $this->configureModels();
         $this->configureDate();
+        $this->configurePermissions();
     }
 
     private function configureCommands(): void
@@ -40,7 +43,8 @@ final class AppServiceProvider extends ServiceProvider
 
     private function configureModels(): void
     {
-        Model::shouldBeStrict();
+        Model::preventLazyLoading();
+        Model::preventSilentlyDiscardingAttributes();
         Model::unguard();
     }
 
@@ -48,5 +52,10 @@ final class AppServiceProvider extends ServiceProvider
     {
         Date::use(CarbonImmutable::class);
         Carbon::macro('human', fn (): string => $this->format('d.m.Y H:i'));
+    }
+
+    private function configurePermissions(): void
+    {
+        Gate::before(fn ($user): ?true => $user->hasRole(Role::SuperAdmin) ? true : null);
     }
 }

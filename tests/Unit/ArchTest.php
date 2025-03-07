@@ -68,7 +68,12 @@ arch('models')
         'App\Models',
         'App\Notifications',
         'App\Observers',
+        'App\Policies',
         'App\Support',
         'Database\Factories',
         'Database\Seeders',
     ]);
+
+arch('concerns')
+    ->expect('App\Concerns')
+    ->traits();

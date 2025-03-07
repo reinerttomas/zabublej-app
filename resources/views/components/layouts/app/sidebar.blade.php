@@ -1,3 +1,7 @@
+@php
+    use App\Enums\Permission;
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
@@ -25,14 +29,28 @@
                     >
                         {{ __('Dashboard') }}
                     </flux:navlist.item>
-                    <flux:navlist.item
-                        icon="users"
-                        :href="route('users.index')"
-                        :current="request()->routeIs('users.index')"
-                        wire:navigate
-                    >
-                        {{ __('Users') }}
-                    </flux:navlist.item>
+
+                    @can(Permission::ListUser)
+                        <flux:navlist.item
+                            icon="users"
+                            :href="route('users.index')"
+                            :current="request()->routeIs('users.index')"
+                            wire:navigate
+                        >
+                            {{ __('Users') }}
+                        </flux:navlist.item>
+                    @endcan
+
+                    @can(Permission::ListEvent)
+                        <flux:navlist.item
+                            icon="calendar"
+                            :href="route('events.index')"
+                            :current="request()->routeIs('events.index')"
+                            wire:navigate
+                        >
+                            {{ __('Events') }}
+                        </flux:navlist.item>
+                    @endcan
                 </flux:navlist.group>
             </flux:navlist>
 

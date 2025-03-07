@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 use App\Builders\UserBuilder;
 use App\Enums\Livewire\DialogName;
+use App\Enums\Permission;
 use App\Livewire\WithPagination;
 use App\Livewire\WithSearching;
 use App\Livewire\WithSorting;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -32,6 +34,8 @@ new class extends Component
 
     public function delete(int $id): void
     {
+        Gate::authorize(Permission::DeleteUser, User::class);
+
         User::findOrFail($id)->delete();
 
         $this->modal(DialogName::UserDelete)->close();

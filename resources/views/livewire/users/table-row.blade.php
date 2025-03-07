@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Enums\Livewire\DialogName;
+use App\Enums\Permission;
 use App\Models\User;
+use App\Policies\UserPolicy;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
@@ -40,6 +42,8 @@ new class extends Component
 
     public function update(): void
     {
+        $this->authorize(Permission::UpdateUser, [User::class]);
+
         $this->validate();
 
         $this->user->update([
@@ -72,17 +76,21 @@ new class extends Component
             <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
             <flux:menu>
-                <flux:menu.item class="justify-between" wire:click="showDialogUpdate">
-                    <div>{{ __('Edit') }}</div>
-                    <flux:icon.square-pen variant="micro" />
-                </flux:menu.item>
+                @can(Permission::UpdateUser)
+                    <flux:menu.item class="justify-between" wire:click="showDialogUpdate">
+                        <div>{{ __('Edit') }}</div>
+                        <flux:icon.square-pen variant="micro" />
+                    </flux:menu.item>
+                @endcan
 
                 <flux:menu.separator />
 
-                <flux:menu.item class="justify-between" variant="danger" wire:click="showDialogDelete">
-                    <div>{{ __('Delete') }}</div>
-                    <flux:icon.trash-2 variant="micro" />
-                </flux:menu.item>
+                @can(Permission::DeleteUser)
+                    <flux:menu.item class="justify-between" variant="danger" wire:click="showDialogDelete">
+                        <div>{{ __('Delete') }}</div>
+                        <flux:icon.trash-2 variant="micro" />
+                    </flux:menu.item>
+                @endcan
             </flux:menu>
         </flux:dropdown>
 

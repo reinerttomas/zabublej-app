@@ -13,8 +13,13 @@ declare(strict_types=1);
 |
 */
 
+use function Pest\Laravel\seed;
+
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->beforeEach(function (): void {
+        seed(Database\Seeders\RoleAndPermissionSeeder::class);
+    })
     ->in('Feature');
 
 /*
