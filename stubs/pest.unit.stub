@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
-test('example', function () {
-    expect(true)->toBeTrue();
+it('example', function (): void {
+    // Arrange
+
+    // Act & Assert
+    get('/')->assertStatus(200);
 });

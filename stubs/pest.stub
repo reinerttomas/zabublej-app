@@ -6,6 +6,5 @@ it('example', function (): void {
     // Arrange
 
     // Act & Assert
-    $this->get('/')
-        ->assertStatus(200);
+    get('/')->assertStatus(200);
 });

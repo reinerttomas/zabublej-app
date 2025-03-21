@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Builders;
 
 use App\Enums\Database\Direction;
+use App\Exceptions\InvalidArgumentException;
+use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
@@ -14,8 +16,30 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
  */
 abstract class Builder extends EloquentBuilder
 {
-    final public function orderByDirection(string $sortBy, Direction $direction = Direction::ASC): self
+    public function orWhereConditions(Closure ...$conditions): static
     {
-        return $this->orderBy($sortBy, $direction->value);
+        if ($conditions === []) {
+            throw new InvalidArgumentException('At least one condition must be provided.');
+        }
+
+        return $this->where(function (self $query) use ($conditions): void {
+            // Aplikujeme první podmínku
+            $firstCondition = array_shift($conditions);
+            $firstCondition($query);
+
+            // Aplikujeme všechny ostatní podmínky s OR
+            foreach ($conditions as $condition) {
+                $query->orWhere(function (self $subQuery) use ($condition): void {
+                    $condition($subQuery);
+                });
+            }
+        });
+    }
+
+    public function orderByDirection(string $sortBy, Direction $direction = Direction::ASC): static
+    {
+        $this->orderBy($sortBy, $direction->value);
+
+        return $this;
     }
 }

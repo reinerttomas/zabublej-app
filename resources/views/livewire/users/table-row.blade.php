@@ -42,7 +42,7 @@ new class extends Component
 
     public function update(): void
     {
-        $this->authorize(Permission::UpdateUser, [User::class]);
+        $this->authorize(Permission::UpdateUser, $this->user);
 
         $this->validate();
 
@@ -63,7 +63,7 @@ new class extends Component
     <flux:table.cell>{{ $user->name }}</flux:table.cell>
     <flux:table.cell>{{ $user->email }}</flux:table.cell>
     <flux:table.cell>{{ $user->phone }}</flux:table.cell>
-    <flux:table.cell>{{ $user->last_login_at?->human() }}</flux:table.cell>
+    <flux:table.cell>{{ $user->last_login_at?->formatDateTime() }}</flux:table.cell>
     <flux:table.cell>
         @if ($user->deleted_at)
             <flux:badge color="red" size="sm">{{ __('Inactive') }}</flux:badge>
@@ -71,75 +71,84 @@ new class extends Component
             <flux:badge color="lime" size="sm">{{ __('Active') }}</flux:badge>
         @endif
     </flux:table.cell>
-    <flux:table.cell>
-        <flux:dropdown>
-            <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
-            <flux:menu>
-                @can(Permission::UpdateUser)
-                    <flux:menu.item class="justify-between" wire:click="showDialogUpdate">
-                        <div>{{ __('Edit') }}</div>
-                        <flux:icon.square-pen variant="micro" />
-                    </flux:menu.item>
-                @endcan
+    @canany([Permission::UpdateUser, Permission::DeleteEvent])
+        <flux:table.cell>
+            <flux:dropdown>
+                <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
-                <flux:menu.separator />
+                <flux:menu>
+                    @can(Permission::UpdateUser)
+                        <flux:menu.item class="justify-between" wire:click="showDialogUpdate">
+                            <div>{{ __('Edit') }}</div>
+                            <flux:icon.square-pen variant="micro" />
+                        </flux:menu.item>
+                    @endcan
 
-                @can(Permission::DeleteUser)
-                    <flux:menu.item class="justify-between" variant="danger" wire:click="showDialogDelete">
-                        <div>{{ __('Delete') }}</div>
-                        <flux:icon.trash-2 variant="micro" />
-                    </flux:menu.item>
-                @endcan
-            </flux:menu>
-        </flux:dropdown>
+                    <flux:menu.separator />
 
-        <flux:modal name="{{ DialogName::UserUpdate }}" class="w-full max-w-lg">
-            <form wire:submit="update" class="space-y-6">
-                <div>
-                    <flux:heading size="lg">{{ __('Edit user') }}</flux:heading>
-                    <flux:subheading>{{ __("Update the user here. Click save when you're done.") }}</flux:subheading>
-                </div>
+                    @can(Permission::DeleteUser)
+                        <flux:menu.item class="justify-between" variant="danger" wire:click="showDialogDelete">
+                            <div>{{ __('Delete') }}</div>
+                            <flux:icon.trash-2 variant="micro" />
+                        </flux:menu.item>
+                    @endcan
+                </flux:menu>
+            </flux:dropdown>
 
-                <flux:input label="{{ __('Name') }}" wire:model="name" />
-                <flux:input type="email" label="{{ __('Email') }}" wire:model="email" />
-                <flux:input label="{{ __('Phone') }}" wire:model="phone" />
+            @can(Permission::UpdateUser)
+                <flux:modal name="{{ DialogName::UserUpdate }}" class="w-full max-w-lg">
+                    <form wire:submit="update" class="space-y-6">
+                        <div>
+                            <flux:heading size="lg">{{ __('Edit user') }}</flux:heading>
+                            <flux:subheading>
+                                {{ __("Update the user here. Click save when you're done.") }}
+                            </flux:subheading>
+                        </div>
 
-                <div class="flex gap-2">
-                    <flux:spacer />
+                        <flux:input label="{{ __('Name') }}" wire:model="name" />
+                        <flux:input type="email" label="{{ __('Email') }}" wire:model="email" />
+                        <flux:input label="{{ __('Phone') }}" wire:model="phone" />
 
-                    <flux:modal.close>
-                        <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
-                    </flux:modal.close>
+                        <div class="flex gap-2">
+                            <flux:spacer />
 
-                    <flux:button type="submit" variant="primary">{{ __('Update') }}</flux:button>
-                </div>
-            </form>
-        </flux:modal>
+                            <flux:modal.close>
+                                <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                            </flux:modal.close>
 
-        <flux:modal name="{{ DialogName::UserDelete }}" class="w-full max-w-lg">
-            <form class="space-y-6" wire:submit="$parent.delete({{ $user->id }})">
-                <div>
-                    <flux:heading size="lg">{{ __('Delete user?') }}</flux:heading>
+                            <flux:button type="submit" variant="primary">{{ __('Update') }}</flux:button>
+                        </div>
+                    </form>
+                </flux:modal>
+            @endcan
 
-                    <flux:subheading>
-                        <p>
-                            {{ __('Are you sure you want to delete') }}
-                            <strong>{{ $user->email }}</strong>
-                        </p>
-                    </flux:subheading>
-                </div>
+            @can(Permission::DeleteUser)
+                <flux:modal name="{{ DialogName::UserDelete }}" class="w-full max-w-lg">
+                    <form class="space-y-6" wire:submit="$parent.delete({{ $user->id }})">
+                        <div>
+                            <flux:heading size="lg">{{ __('Delete user') }}</flux:heading>
 
-                <div class="flex gap-2">
-                    <flux:spacer />
+                            <flux:subheading>
+                                <p>
+                                    {{ __('Are you sure you want to delete') }}
+                                    <strong>{{ $user->email }}</strong>
+                                </p>
+                            </flux:subheading>
+                        </div>
 
-                    <flux:modal.close>
-                        <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
-                    </flux:modal.close>
+                        <div class="flex gap-2">
+                            <flux:spacer />
 
-                    <flux:button type="submit" variant="danger">{{ __('Delete') }}</flux:button>
-                </div>
-            </form>
-        </flux:modal>
-    </flux:table.cell>
+                            <flux:modal.close>
+                                <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                            </flux:modal.close>
+
+                            <flux:button type="submit" variant="danger">{{ __('Delete') }}</flux:button>
+                        </div>
+                    </form>
+                </flux:modal>
+            @endcan
+        </flux:table.cell>
+    @endcanany
 </flux:table.row>

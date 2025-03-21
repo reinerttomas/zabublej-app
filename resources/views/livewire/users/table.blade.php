@@ -21,6 +21,9 @@ new class extends Component
     use WithSearching;
     use WithSorting;
 
+    /**
+     * @return LengthAwarePaginator<User>
+     */
     #[Computed]
     public function users(): LengthAwarePaginator
     {
@@ -34,9 +37,11 @@ new class extends Component
 
     public function delete(int $id): void
     {
-        Gate::authorize(Permission::DeleteUser, User::class);
+        $user = User::findOrFail($id);
 
-        User::findOrFail($id)->delete();
+        $this->authorize(Permission::DeleteUser, $user);
+
+        $user->delete();
 
         $this->modal(DialogName::UserDelete)->close();
 

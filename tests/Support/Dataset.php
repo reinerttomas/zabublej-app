@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 final readonly class Dataset
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function __construct(
-        public ?Model $model,
-        public array $input,
+        public ?User $actingAs = null,
+        public ?Model $model = null,
+        public array $data = [],
     ) {}
-
-    public static function make(?Model $model = null, array $input = []): self
-    {
-        return new self($model, $input);
-    }
 }

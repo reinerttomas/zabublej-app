@@ -9,7 +9,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method App\\Providers\\AppServiceProvider\:\:format\(\)\.$#'
 			identifier: method.notFound
-			count: 1
+			count: 3
 			path: app/Providers/AppServiceProvider.php
 
 		-

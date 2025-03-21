@@ -29,18 +29,16 @@ final class RoleAndPermissionSeeder extends Seeder
     {
         $permissions = match ($role->name) {
             RoleEnum::Admin->value => [
-                PermissionEnum::ListUser,
+                PermissionEnum::ViewAnyUser,
                 PermissionEnum::UpdateUser,
                 PermissionEnum::DeleteUser,
-                PermissionEnum::ListEvent,
-                PermissionEnum::ShowEvent,
+                PermissionEnum::ViewAnyEvent,
                 PermissionEnum::CreateEvent,
                 PermissionEnum::UpdateEvent,
                 PermissionEnum::DeleteEvent,
             ],
             RoleEnum::Staff->value => [
-                PermissionEnum::ListEvent,
-                PermissionEnum::ShowEvent,
+                PermissionEnum::ViewEvent,
             ],
             default => [],
         };

@@ -26,6 +26,6 @@ final class UserSeeder extends Seeder
             'email' => 'staff@example.com',
         ]);
 
-        User::factory()->staff()->count(10)->create();
+        User::factory()->staff()->count(5)->create();
     }
 }

@@ -51,7 +51,9 @@ final class AppServiceProvider extends ServiceProvider
     private function configureDate(): void
     {
         Date::use(CarbonImmutable::class);
-        Carbon::macro('human', fn (): string => $this->format('d.m.Y H:i'));
+        Carbon::macro('formatDateTime', fn (): string => $this->format('d.m.Y H:i'));
+        Carbon::macro('formatDate', fn (): string => $this->format('d.m.Y'));
+        Carbon::macro('formatTime', fn (): string => $this->format('H:i'));
     }
 
     private function configurePermissions(): void

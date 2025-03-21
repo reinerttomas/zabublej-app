@@ -18,8 +18,10 @@ arch('avoid mutation')
     ->toBeReadonly()
     ->ignoring([
         'App\Builders',
+        'App\Exceptions',
         'App\Models',
         'App\Providers',
+        'App\States',
         'App\Support',
         'App\View',
     ]);
@@ -30,8 +32,10 @@ arch('avoid inheritance')
     ->toExtendNothing()
     ->ignoring([
         'App\Builders',
+        'App\Exceptions',
         'App\Models',
         'App\Providers',
+        'App\States',
         'App\Support',
         'App\View',
     ]);
@@ -42,6 +46,7 @@ arch('avoid open for extension')
     ->toBeFinal()
     ->ignoring([
         'App\Builders',
+        'App\States',
     ]);
 
 arch('avoid abstraction')
@@ -49,6 +54,8 @@ arch('avoid abstraction')
     ->not->toBeAbstract()
     ->ignoring([
         'App\Builders',
+        'App\Contracts',
+        'App\States',
     ]);
 
 arch('factories')
@@ -64,11 +71,14 @@ arch('models')
     ->toHaveMethod('casts')
     ->toOnlyBeUsedIn([
         'App\Builders',
+        'App\Contracts',
         'App\Events',
         'App\Models',
         'App\Notifications',
         'App\Observers',
         'App\Policies',
+        'App\Services',
+        'App\States',
         'App\Support',
         'Database\Factories',
         'Database\Seeders',

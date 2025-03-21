@@ -30,7 +30,7 @@
                         {{ __('Dashboard') }}
                     </flux:navlist.item>
 
-                    @can(Permission::ListUser)
+                    @can(Permission::ViewAnyUser)
                         <flux:navlist.item
                             icon="users"
                             :href="route('users.index')"
@@ -41,7 +41,7 @@
                         </flux:navlist.item>
                     @endcan
 
-                    @can(Permission::ListEvent)
+                    @can('view-any', App\Models\Event::class)
                         <flux:navlist.item
                             icon="calendar"
                             :href="route('events.index')"

@@ -20,7 +20,7 @@ pest()->extend(Tests\TestCase::class)
     ->beforeEach(function (): void {
         seed(Database\Seeders\RoleAndPermissionSeeder::class);
     })
-    ->in('Feature');
+    ->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------

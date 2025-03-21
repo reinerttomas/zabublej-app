@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace {{ factoryNamespace }};
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+
+use function Pest\Faker\fake;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\{{ namespacedModel }}>
@@ -10,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class {{ factory }}Factory extends Factory
 {
     /**
-     * Define the model's default state.
-     *
      * @return array<string, mixed>
      */
     public function definition(): array

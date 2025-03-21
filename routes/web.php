@@ -18,8 +18,13 @@ Route::middleware(['auth'])->group(function (): void {
 });
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
+    // Users
     Volt::route('users', 'users.index')->name('users.index');
+
+    // Events
     Volt::route('events', 'events.index')->name('events.index');
+    Volt::route('events/{event}', 'events.show')->name('events.show');
+    Volt::route('events/{event}/edit', 'events.edit')->name('events.edit');
 });
 
 require __DIR__ . '/auth.php';

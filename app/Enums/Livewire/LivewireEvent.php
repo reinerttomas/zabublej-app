@@ -7,4 +7,5 @@ namespace App\Enums\Livewire;
 enum LivewireEvent: string
 {
     case ProfileInformationUpdated = 'profile-information-updated';
+    case EventUpdated = 'event-updated';
 }

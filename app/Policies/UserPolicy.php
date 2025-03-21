@@ -14,7 +14,7 @@ final readonly class UserPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo(Permission::ListUser);
+        return $user->hasPermissionTo(Permission::ViewAnyUser);
     }
 
     public function update(User $user): bool

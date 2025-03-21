@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Builders\UserBuilder;
-use App\Concerns\HasGuardType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,11 +16,9 @@ use Spatie\Permission\Traits\HasRoles;
 final class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasGuardType, HasRoles, Notifiable, SoftDeletes;
+    use HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
      * @var list<string>
      */
     protected $hidden = [
@@ -34,8 +32,14 @@ final class User extends Authenticatable
     }
 
     /**
-     * Get the user's initials
+     * @return BelongsToMany<Event, $this>
      */
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class)
+            ->withTimestamps();
+    }
+
     public function initials(): string
     {
         return Str::of($this->name)
@@ -45,8 +49,6 @@ final class User extends Authenticatable
     }
 
     /**
-     * Get the attributes that should be cast.
-     *
      * @return array<string, string>
      */
     protected function casts(): array
