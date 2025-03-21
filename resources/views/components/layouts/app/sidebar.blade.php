@@ -1,5 +1,7 @@
 @php
     use App\Enums\Permission;
+    use App\Models\Event;
+    use App\Models\User;
 @endphp
 
 <!DOCTYPE html>
@@ -30,7 +32,7 @@
                         {{ __('Dashboard') }}
                     </flux:navlist.item>
 
-                    @can(Permission::ViewAnyUser)
+                    @can('viewAny', User::class)
                         <flux:navlist.item
                             icon="users"
                             :href="route('users.index')"
@@ -41,7 +43,7 @@
                         </flux:navlist.item>
                     @endcan
 
-                    @can('view-any', App\Models\Event::class)
+                    @can('viewAny', Event::class)
                         <flux:navlist.item
                             icon="calendar"
                             :href="route('events.index')"

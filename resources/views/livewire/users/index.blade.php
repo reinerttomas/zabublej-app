@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
@@ -10,7 +11,7 @@ new class extends Component
 {
     public function mount(): void
     {
-        $this->authorize('viewAny', User::class);
+        Gate::authorize('viewAny', User::class);
     }
 }; ?>
 

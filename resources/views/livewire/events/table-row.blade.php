@@ -43,13 +43,13 @@ new class extends Component
         </flux:badge>
     </flux:table.cell>
 
-    @canany([Permission::UpdateEvent, Permission::DeleteEvent])
+    @canany(['update', 'delete'], $event)
         <flux:table.cell>
             <flux:dropdown>
                 <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
                 <flux:menu>
-                    @can(Permission::UpdateEvent)
+                    @can('update', $event)
                         <flux:menu.item
                             class="justify-between"
                             href="{{ route('events.edit', $event) }}"
@@ -62,7 +62,7 @@ new class extends Component
 
                     <flux:menu.separator />
 
-                    @can(Permission::DeleteEvent)
+                    @can('delete', $event)
                         <flux:menu.item class="justify-between" variant="danger" wire:click="showDialogDelete">
                             <div>{{ __('Delete') }}</div>
                             <flux:icon.trash-2 variant="micro" />
@@ -71,7 +71,7 @@ new class extends Component
                 </flux:menu>
             </flux:dropdown>
 
-            @can(Permission::DeleteEvent)
+            @can('delete', $event)
                 <flux:modal name="{{ DialogName::EventDelete }}" class="min-w-[22rem]">
                     <form class="space-y-6" wire:submit="$parent.delete({{ $event->id }})">
                         <div>

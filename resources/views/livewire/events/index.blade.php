@@ -13,7 +13,7 @@ new class extends Component
 {
     public function mount(): void
     {
-        $this->authorize('viewAny', Event::class);
+        Gate::authorize('viewAny', Event::class);
     }
 
     public function showDialogCreate(): void
@@ -30,7 +30,7 @@ new class extends Component
                 <flux:subheading size="lg" class="mb-6">{{ __('Manage your events and attendees') }}</flux:subheading>
             </div>
             <div>
-                @can(Permission::CreateEvent)
+                @can('create', Event::class)
                     <flux:button variant="primary" wire:click="showDialogCreate">{{ __('Create Event') }}</flux:button>
                 @endcan
             </div>
@@ -40,7 +40,7 @@ new class extends Component
 
     <livewire:events.table />
 
-    @can(Permission::CreateEvent)
+    @can('create', Event::class)
         <flux:modal name="{{ DialogName::EventCreate }}" class="w-full max-w-lg">
             <livewire:events.create-event-form />
         </flux:modal>

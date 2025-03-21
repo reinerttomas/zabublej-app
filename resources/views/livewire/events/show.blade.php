@@ -26,7 +26,7 @@ new class extends Component
                 <flux:subheading size="lg" class="mb-6">{{ __('Manage your events and attendees') }}</flux:subheading>
             </div>
             <div class="flex items-end gap-4">
-                @can(Permission::UpdateEvent)
+                @can('update', $this->event)
                     <flux:button variant="primary" href="{{ route('events.edit', $event) }}" wire:navigate>
                         {{ __('Upravit') }}
                     </flux:button>
@@ -95,7 +95,7 @@ new class extends Component
                         <flux:heading size="lg">{{ __('Finanční informace') }}</flux:heading>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            @can(Permission::UpdateEvent)
+                            @can('viewPrice', $this->event)
                                 <div class="flex items-center gap-2">
                                     <div>{{ __('Cena události:') }}</div>
                                     <div class="font-bold">{{ $event->price }}&nbsp;Kč</div>

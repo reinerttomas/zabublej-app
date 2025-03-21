@@ -18,7 +18,7 @@ new class extends Component
 
     public function mount(): void
     {
-        $this->authorize(Permission::UpdateEvent, $this->event);
+        Gate::authorize('update', $this->event);
     }
 
     #[On(LivewireEvent::EventUpdated->value)]
@@ -29,6 +29,8 @@ new class extends Component
 
     public function changeStatus(EventStatus $status): void
     {
+        Gate::authorize('update', $this->event);
+
         match ($status) {
             EventStatus::Published => $this->event->state()->published(),
             EventStatus::Cancelled => $this->event->state()->cancelled(),
@@ -52,7 +54,7 @@ new class extends Component
                 <flux:subheading size="lg" class="mb-6">{{ __('Manage your events and attendees') }}</flux:subheading>
             </div>
             <div class="flex items-end gap-4">
-                @can(Permission::UpdateEvent)
+                @can('update', $event)
                     @switch($event->status)
                         @case(EventStatus::Draft)
                             <flux:button variant="primary" wire:click="changeStatus({{ EventStatus::Published }})">

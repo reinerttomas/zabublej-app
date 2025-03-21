@@ -39,7 +39,7 @@ new class extends Component
     {
         $user = User::findOrFail($id);
 
-        $this->authorize(Permission::DeleteUser, $user);
+        Gate::authorize('delete', $user);
 
         $user->delete();
 

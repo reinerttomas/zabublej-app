@@ -23,6 +23,11 @@ final readonly class EventPolicy
         return $user->hasPermissionTo(Permission::ViewAnyEvent);
     }
 
+    public function viewPrice(User $user): bool
+    {
+        return $user->hasPermissionTo(Permission::ViewEventPrice);
+    }
+
     public function view(User $user, Event $event): bool
     {
         if ($user->hasPermissionTo(Permission::ViewAnyEvent)) {

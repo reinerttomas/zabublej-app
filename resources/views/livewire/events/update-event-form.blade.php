@@ -7,6 +7,7 @@ use App\Enums\Livewire\LivewireEvent;
 use App\Enums\Permission;
 use App\Models\Event;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -80,6 +81,8 @@ new class extends Component
 
     public function update(): void
     {
+        Gate::authorize('update', $this->event);
+
         $this->validate();
 
         $this->event->fill([

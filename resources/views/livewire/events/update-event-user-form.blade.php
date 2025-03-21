@@ -50,7 +50,7 @@ new class extends Component
 
     public function addUser(): void
     {
-        $this->authorize(Permission::UpdateEvent, $this->event);
+        Gate::authorize('update', $this->event);
 
         $this->validate([
             'userId' => ['required', 'exists:users,id'],
@@ -67,7 +67,7 @@ new class extends Component
 
     public function removeUser(int $userId): void
     {
-        $this->authorize(Permission::UpdateEvent, $this->event);
+        Gate::authorize('update', $this->event);
 
         $this->event->users()->detach($userId);
 
@@ -79,13 +79,11 @@ new class extends Component
     <flux:heading size="lg">{{ __('Pracovníci') }}</flux:heading>
     <flux:subheading>{{ __('Správa pracovníků pro tuto událost') }}</flux:subheading>
 
-    @can(Permission::UpdateEvent)
+    @can('update', $event)
         <flux:button variant="primary" class="w-full" wire:click="showDialogAddUser">
             {{ __('Přidat pracovníka') }}
         </flux:button>
-    @endcan
 
-    @can(Permission::UpdateEvent)
         <flux:modal name="{{ DialogName::EventAddUser }}" class="w-full max-w-lg">
             <form wire:submit="addUser" class="space-y-6">
                 <div>

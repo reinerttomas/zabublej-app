@@ -6,6 +6,7 @@ use App\Enums\Livewire\DialogName;
 use App\Enums\Permission;
 use App\Models\User;
 use App\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
@@ -42,7 +43,7 @@ new class extends Component
 
     public function update(): void
     {
-        $this->authorize(Permission::UpdateUser, $this->user);
+        Gate::authorize('update', $this->user);
 
         $this->validate();
 
@@ -72,13 +73,13 @@ new class extends Component
         @endif
     </flux:table.cell>
 
-    @canany([Permission::UpdateUser, Permission::DeleteEvent])
+    @canany(['update', 'delete'], $user)
         <flux:table.cell>
             <flux:dropdown>
                 <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" inset="top bottom"></flux:button>
 
                 <flux:menu>
-                    @can(Permission::UpdateUser)
+                    @can('update', $user)
                         <flux:menu.item class="justify-between" wire:click="showDialogUpdate">
                             <div>{{ __('Edit') }}</div>
                             <flux:icon.square-pen variant="micro" />
@@ -87,7 +88,7 @@ new class extends Component
 
                     <flux:menu.separator />
 
-                    @can(Permission::DeleteUser)
+                    @can('delete', $user)
                         <flux:menu.item class="justify-between" variant="danger" wire:click="showDialogDelete">
                             <div>{{ __('Delete') }}</div>
                             <flux:icon.trash-2 variant="micro" />
@@ -96,7 +97,7 @@ new class extends Component
                 </flux:menu>
             </flux:dropdown>
 
-            @can(Permission::UpdateUser)
+            @can('update', $user)
                 <flux:modal name="{{ DialogName::UserUpdate }}" class="w-full max-w-lg">
                     <form wire:submit="update" class="space-y-6">
                         <div>
@@ -123,7 +124,7 @@ new class extends Component
                 </flux:modal>
             @endcan
 
-            @can(Permission::DeleteUser)
+            @can('delete', $user)
                 <flux:modal name="{{ DialogName::UserDelete }}" class="w-full max-w-lg">
                     <form class="space-y-6" wire:submit="$parent.delete({{ $user->id }})">
                         <div>

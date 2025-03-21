@@ -23,7 +23,7 @@ new class extends Component
 
     public function create(): void
     {
-        $this->authorize(Permission::CreateEvent, Event::class);
+        Gate::authorize('create', Event::class);
 
         $this->validate();
 
