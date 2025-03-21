@@ -56,10 +56,15 @@ it('allows admin and staff to show event details', function (User $user, Event $
         User::factory()->admin()->create(),
         Event::factory()->create(),
     ],
-    fn (): array => [
-        User::factory()->staff()->create(),
-        Event::factory()->create(),
-    ],
+    function (): array {
+        $user = User::factory()->staff()->create();
+        $event = Event::factory()->hasAttached($user)->create();
+
+        return [
+            $user,
+            $event,
+        ];
+    },
 ]);
 
 it('forbids staff to show edit button', function (User $user, Event $event): void {
@@ -69,6 +74,22 @@ it('forbids staff to show edit button', function (User $user, Event $event): voi
         ->assertDontSee('Cena události:')
         ->assertSee('Odměna pro pracovníka:')
         ->assertSee($event->reward);
+})->with([
+    function (): array {
+        $user = User::factory()->staff()->create();
+        $event = Event::factory()->hasAttached($user)->create();
+
+        return [
+            $user,
+            $event,
+        ];
+    },
+]);
+
+it('forbids staff to show event when is not assigned', function (User $user, Event $event): void {
+    actingAs($user)
+        ->get("/events/{$event->id}")
+        ->assertStatus(403);
 })->with([
     fn (): array => [
         User::factory()->staff()->create(),
