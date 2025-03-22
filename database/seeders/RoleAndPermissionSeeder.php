@@ -33,7 +33,7 @@ final class RoleAndPermissionSeeder extends Seeder
                 PermissionEnum::UpdateUser,
                 PermissionEnum::DeleteUser,
                 PermissionEnum::ViewAnyEvent,
-                PermissionEnum::ViewEventPrice,
+                PermissionEnum::ViewPriceEvent,
                 PermissionEnum::CreateEvent,
                 PermissionEnum::UpdateEvent,
                 PermissionEnum::DeleteEvent,

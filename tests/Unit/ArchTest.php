@@ -18,6 +18,7 @@ arch('avoid mutation')
     ->toBeReadonly()
     ->ignoring([
         'App\Builders',
+        'App\Console',
         'App\Exceptions',
         'App\Models',
         'App\Notifications',
@@ -33,6 +34,7 @@ arch('avoid inheritance')
     ->toExtendNothing()
     ->ignoring([
         'App\Builders',
+        'App\Console',
         'App\Exceptions',
         'App\Models',
         'App\Notifications',
@@ -73,6 +75,7 @@ arch('models')
     ->toHaveMethod('casts')
     ->toOnlyBeUsedIn([
         'App\Builders',
+        'App\Console',
         'App\Contracts',
         'App\Events',
         'App\Models',

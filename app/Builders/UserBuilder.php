@@ -35,4 +35,9 @@ final class UserBuilder extends Builder
     {
         return $this->whereHas('roles', $condition);
     }
+
+    public function whereEmail(string $email): self
+    {
+        return $this->where('email', $email);
+    }
 }

@@ -6,13 +6,15 @@ namespace App\Enums;
 
 enum Permission: string
 {
+    // Users
     case ViewAnyUser = 'view-any-user';
     case ViewUser = 'view-user';
     case UpdateUser = 'update-user';
     case DeleteUser = 'delete-user';
 
+    // Events
     case ViewAnyEvent = 'view-any-event';
-    case ViewEventPrice = 'view-event-price';
+    case ViewPriceEvent = 'view-price-event';
     case ViewEvent = 'view-event';
     case CreateEvent = 'create-event';
     case UpdateEvent = 'update-event';
