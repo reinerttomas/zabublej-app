@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Builders\EventBuilder;
 use App\Builders\UserBuilder;
+use App\Enums\EventStatus;
 use App\Enums\Livewire\DialogName;
 use App\Enums\Permission;
 use App\Livewire\WithPagination;
@@ -35,9 +36,11 @@ new class extends Component
         return Event::query()
             ->with('users')
             ->when(! Gate::allows('viewAll', Event::class), function (EventBuilder $query) use ($user): void {
-                $query->whereHasUsers(function (UserBuilder $query) use ($user): void {
-                    $query->whereKey($user->id);
-                });
+                $query
+                    ->whereStatus(EventStatus::Draft, not: true)
+                    ->whereHasUsers(function (UserBuilder $query) use ($user): void {
+                        $query->whereKey($user->id);
+                    });
             })
             ->when($this->isSearchSet(), function (EventBuilder $query): void {
                 $query->search($this->search);

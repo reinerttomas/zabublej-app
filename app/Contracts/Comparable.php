@@ -12,5 +12,10 @@ interface Comparable
     /**
      * @param  T  $other
      */
-    public function isEqual(self $other): bool;
+    public function equal(self $other): bool;
+
+    /**
+     * @param  T  $other
+     */
+    public function notEqual(self $other): bool;
 }

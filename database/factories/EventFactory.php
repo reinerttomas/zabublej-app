@@ -36,4 +36,25 @@ final class EventFactory extends Factory
             'status' => fake()->randomElement(EventStatus::cases()),
         ];
     }
+
+    public function draft(): self
+    {
+        return $this->state([
+            'status' => EventStatus::Draft,
+        ]);
+    }
+
+    public function published(): self
+    {
+        return $this->state([
+            'status' => EventStatus::Published,
+        ]);
+    }
+
+    public function cancelled(): self
+    {
+        return $this->state([
+            'status' => EventStatus::Cancelled,
+        ]);
+    }
 }

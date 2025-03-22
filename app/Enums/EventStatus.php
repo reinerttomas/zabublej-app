@@ -46,8 +46,23 @@ enum EventStatus: int implements Comparable
         };
     }
 
-    public function isEqual(Comparable $other): bool
+    public function equal(Comparable $other): bool
     {
         return $this === $other;
+    }
+
+    public function notEqual(Comparable $other): bool
+    {
+        return $this !== $other;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this === self::Published;
+    }
+
+    public function isCancelled(): bool
+    {
+        return $this === self::Cancelled;
     }
 }

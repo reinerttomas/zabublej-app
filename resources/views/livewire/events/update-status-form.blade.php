@@ -35,7 +35,7 @@ new class extends Component
 
     <flux:select variant="listbox" wire:model="status" wire:change="update">
         @foreach (EventStatus::cases() as $status)
-            <flux:select.option value="{{ $status->value }}" :selected="$status->isEqual($this->status)">
+            <flux:select.option value="{{ $status->value }}" :selected="$status->equal($this->status)">
                 <div class="flex items-center gap-2">
                     <div class="{{ $status->color() }} size-4 rounded-full"></div>
                     <div>{{ $status->label() }}</div>

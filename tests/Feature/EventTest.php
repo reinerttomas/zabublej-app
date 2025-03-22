@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Enums\EventStatus;
 use App\Models\Event;
 use App\Models\User;
+use App\Notifications\EventAssignmentNotification;
+use App\Notifications\EventCancelledNotification;
 use Livewire\Volt\Volt;
 
 use function Pest\Faker\fake;
@@ -280,6 +283,120 @@ it('allows admin to remove worker from event', function (User $user, Event $even
         return [
             User::factory()->admin()->create(),
             Event::factory()->hasAttached($worker)->create(),
+            $worker,
+        ];
+    },
+]);
+
+it('notify workers when event is published', function (User $user, Event $event, User $worker): void {
+    Notification::fake();
+
+    actingAs($user);
+
+    expect($event->status)->toBe(EventStatus::Draft);
+
+    Volt::test('events.edit', ['event' => $event])
+        ->call('changeStatus', EventStatus::Published)
+        ->assertStatus(200)
+        ->assertHasNoErrors();
+
+    $event->refresh();
+
+    expect($event->status)->toBe(EventStatus::Published);
+
+    Notification::assertSentTo($worker, EventAssignmentNotification::class);
+})->with([
+    function (): array {
+        $worker = User::factory()->create();
+
+        return [
+            User::factory()->superAdmin()->create(),
+            Event::factory()->draft()->hasAttached($worker)->create(),
+            $worker,
+        ];
+    },
+    function (): array {
+        $worker = User::factory()->create();
+
+        return [
+            User::factory()->admin()->create(),
+            Event::factory()->draft()->hasAttached($worker)->create(),
+            $worker,
+        ];
+    },
+]);
+
+it('notify worker when assignment to published event', function (User $user, Event $event, User $worker): void {
+    Notification::fake();
+
+    actingAs($user);
+
+    expect($event->status)->toBe(EventStatus::Draft);
+
+    Volt::test('events.edit', ['event' => $event])
+        ->call('changeStatus', EventStatus::Published)
+        ->assertStatus(200)
+        ->assertHasNoErrors();
+
+    $event->refresh();
+
+    expect($event->status)->toBe(EventStatus::Published);
+
+    Notification::assertSentTo($worker, EventAssignmentNotification::class);
+})->with([
+    function (): array {
+        $worker = User::factory()->create();
+
+        return [
+            User::factory()->superAdmin()->create(),
+            Event::factory()->draft()->hasAttached($worker)->create(),
+            $worker,
+        ];
+    },
+    function (): array {
+        $worker = User::factory()->create();
+
+        return [
+            User::factory()->admin()->create(),
+            Event::factory()->draft()->hasAttached($worker)->create(),
+            $worker,
+        ];
+    },
+]);
+
+it('notify workers when event is cancelled', function (User $user, Event $event, User $worker): void {
+    Notification::fake();
+
+    actingAs($user);
+
+    expect($event->status)->toBe(EventStatus::Published);
+
+    Volt::test('events.edit', ['event' => $event])
+        ->call('changeStatus', EventStatus::Cancelled)
+        ->assertStatus(200)
+        ->assertHasNoErrors();
+
+    $event->refresh();
+
+    expect($event->status)->toBe(EventStatus::Cancelled);
+
+    Notification::assertSentTo($worker, EventCancelledNotification::class);
+})->with([
+    function (): array {
+        $worker = User::factory()->create();
+
+        return [
+            User::factory()->superAdmin()->create(),
+            Event::factory()->published()->hasAttached($worker)->create(),
+            $worker,
+        ];
+    },
+    function (): array {
+        $worker = User::factory()->create();
+
+        return [
+            User::factory()->admin()->create(),
+            Event::factory()->published()->hasAttached($worker)->create(),
             $worker,
         ];
     },

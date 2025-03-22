@@ -7,6 +7,7 @@ use App\Enums\Livewire\DialogName;
 use App\Enums\Permission;
 use App\Models\Event;
 use App\Models\User;
+use App\Notifications\EventAssignmentNotification;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -56,7 +57,13 @@ new class extends Component
             'userId' => ['required', 'exists:users,id'],
         ]);
 
-        $this->event->users()->attach($this->userId);
+        $user = User::findOrFail($this->userId);
+
+        $this->event->users()->attach($user->id);
+
+        if ($this->event->status->isPublished()) {
+            $user->notify(new EventAssignmentNotification($this->event));
+        }
 
         $this->reset('userId');
 
