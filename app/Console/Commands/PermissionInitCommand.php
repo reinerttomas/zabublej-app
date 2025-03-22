@@ -7,7 +7,7 @@ namespace App\Console\Commands;
 use App\Services\PermissionService;
 use Illuminate\Console\Command;
 
-final class InitPermissionCommand extends Command
+final class PermissionInitCommand extends Command
 {
     /**
      * @var string

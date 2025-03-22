@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-final class CreateSuperAdminCommand extends Command
+final class UserCreateSuperAdminCommand extends Command
 {
     /**
      * @var string
