@@ -9,14 +9,12 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-use function Laravel\Prompts\warning;
-
 final class CreateSuperAdminCommand extends Command
 {
     /**
      * @var string
      */
-    protected $signature = 'users:create-super-admin';
+    protected $signature = 'user:create-super-admin';
 
     /**
      * @var string
@@ -28,7 +26,7 @@ final class CreateSuperAdminCommand extends Command
         $userData = $this->getData();
 
         if (User::query()->whereEmail($userData['email'])->exists()) {
-            warning('Super admin already exists.');
+            $this->warn('Super admin already exists.');
 
             return;
         }
@@ -41,7 +39,7 @@ final class CreateSuperAdminCommand extends Command
             return $user;
         });
 
-        info("Super admin {$user->email} created");
+        $this->info("Super admin {$user->email} created");
     }
 
     /**
