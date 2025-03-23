@@ -8,4 +8,5 @@ enum LivewireEvent: string
 {
     case ProfileInformationUpdated = 'profile-information-updated';
     case EventUpdated = 'event-updated';
+    case InvitationCreated = 'invitation-created';
 }

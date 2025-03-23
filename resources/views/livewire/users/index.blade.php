@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use App\Enums\Livewire\DialogName;
+use App\Enums\Livewire\LivewireEvent;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Volt\Component;
 
 new class extends Component
@@ -18,6 +20,12 @@ new class extends Component
     public function showDialogInvite(): void
     {
         $this->modal(DialogName::UserInvite)->show();
+    }
+
+    #[On(LivewireEvent::InvitationCreated->value)]
+    public function closeDialogInvite(): void
+    {
+        $this->modal(DialogName::UserInvite)->close();
     }
 }; ?>
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\CreateInvitationAction;
 use App\Enums\Livewire\DialogName;
+use App\Enums\Livewire\LivewireEvent;
 use App\Enums\Role;
 use App\Models\Invitation;
 use App\Models\User;
@@ -38,9 +39,9 @@ new class extends Component
 
         $this->reset();
 
-        $this->modal(DialogName::UserInvite)->close();
+        $this->dispatch(LivewireEvent::InvitationCreated);
 
-        Flux::toast('Created.', variant: 'success');
+        Flux::toast('Sent.', variant: 'success');
     }
 }; ?>
 
