@@ -10,11 +10,11 @@ final class EventDraftState extends BaseEventState
 {
     public function published(): void
     {
-        $this->event->status = EventStatus::Published;
+        $this->event->setStatus(EventStatus::Published);
     }
 
     public function cancelled(): void
     {
-        $this->event->status = EventStatus::Cancelled;
+        $this->event->setStatus(EventStatus::Cancelled);
     }
 }

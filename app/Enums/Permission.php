@@ -9,6 +9,7 @@ enum Permission: string
     // Users
     case ViewAnyUser = 'view-any-user';
     case ViewUser = 'view-user';
+    case InviteUser = 'invite-user';
     case UpdateUser = 'update-user';
     case DeleteUser = 'delete-user';
 

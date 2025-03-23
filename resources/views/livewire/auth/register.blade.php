@@ -2,37 +2,58 @@
 
 declare(strict_types=1);
 
+use App\Actions\RegisterUserAction;
+use App\Events\Login;
+use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
+use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.auth')] class extends Component
 {
+    public Invitation $invitation;
+
     public string $name = '';
     public string $email = '';
+    public string $phone = '+420';
     public string $password = '';
     public string $password_confirmation = '';
 
-    /**
-     * Handle an incoming registration request.
-     */
-    public function register(): void
+    public function mount(string $token): void
+    {
+        $invitation = Invitation::findOrFail($token);
+
+        if ($invitation->isAccepted()) {
+            abort(403, trans('Tato pozvánka již byla použita.'));
+        }
+
+        if ($invitation->isExpired()) {
+            abort(403, trans('Platnost této pozvánky vypršela.'));
+        }
+
+        $this->invitation = $invitation;
+        $this->name = $this->invitation->payload->name;
+        $this->email = $this->invitation->email;
+    }
+
+    public function register(RegisterUserAction $registerUser): void
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'phone' => ['required', 'string', 'max:50'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-
-        event(new Registered(($user = User::create($validated))));
-
-        Auth::login($user);
+        $registerUser->execute($this->invitation, $validated);
 
         $this->redirect(route('dashboard', absolute: false), navigate: true);
     }
@@ -70,6 +91,19 @@ new #[Layout('components.layouts.auth')] class extends Component
             placeholder="email@example.com"
         />
 
+        <!-- Phone -->
+        <flux:input
+            wire:model="phone"
+            id="phone"
+            label="{{ __('Phone') }}"
+            type="text"
+            name="phone"
+            required
+            autocomplete="phone"
+            placeholder="Phone"
+            mask="+999 999 999 999"
+        />
+
         <!-- Password -->
         <flux:input
             wire:model="password"
@@ -80,6 +114,7 @@ new #[Layout('components.layouts.auth')] class extends Component
             required
             autocomplete="new-password"
             placeholder="Password"
+            viewable
         />
 
         <!-- Confirm Password -->
@@ -92,6 +127,7 @@ new #[Layout('components.layouts.auth')] class extends Component
             required
             autocomplete="new-password"
             placeholder="Confirm password"
+            viewable
         />
 
         <div class="flex items-center justify-end">

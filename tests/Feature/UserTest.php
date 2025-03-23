@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Event;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Livewire\Volt\Volt;
 
 use function Pest\Faker\fake;
@@ -47,7 +48,7 @@ it('allows admin to update user', function (User $user, Event $event, array $dat
         ->name->toEqual($data['name'])
         ->email->toEqual($data['email'])
         ->email_verified_at->not->toBeNull()
-        ->phone->toEqual($data['phone']);
+        ->phone->toEqual(Str::remove(' ', $data['phone']));
 })->with([
     fn (): array => [
         User::factory()->superAdmin()->create(),

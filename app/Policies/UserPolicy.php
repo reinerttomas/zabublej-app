@@ -17,6 +17,11 @@ final readonly class UserPolicy
         return $user->hasPermissionTo(Permission::ViewAnyUser);
     }
 
+    public function invite(User $user): bool
+    {
+        return $user->hasPermissionTo(Permission::InviteUser);
+    }
+
     public function update(User $user): bool
     {
         return $user->hasPermissionTo(Permission::UpdateUser);

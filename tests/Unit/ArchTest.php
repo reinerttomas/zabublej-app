@@ -25,6 +25,7 @@ arch('avoid mutation')
         'App\Providers',
         'App\States',
         'App\Support',
+        'App\ValueObjects',
         'App\View',
     ]);
 
@@ -41,6 +42,7 @@ arch('avoid inheritance')
         'App\Providers',
         'App\States',
         'App\Support',
+        'App\ValueObjects',
         'App\View',
     ]);
 
@@ -74,6 +76,7 @@ arch('models')
     ->expect('App\Models')
     ->toHaveMethod('casts')
     ->toOnlyBeUsedIn([
+        'App\Actions',
         'App\Builders',
         'App\Console',
         'App\Contracts',

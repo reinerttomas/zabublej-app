@@ -16,6 +16,7 @@
         "livewire/flux": "^2.0",
         "livewire/flux-pro": "^2.0",
         "livewire/volt": "^1.6.7",
+        "spatie/laravel-data": "^4.14",
         "spatie/laravel-permission": "^6.16"
     },
     "require-dev": {

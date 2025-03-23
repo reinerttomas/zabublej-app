@@ -18,6 +18,28 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property \Carbon\CarbonImmutable $start_at
+ * @property string|null $location
+ * @property string|null $contact_person
+ * @property string|null $contact_email
+ * @property string|null $contact_phone
+ * @property bool $is_multi_person
+ * @property int|null $children_count
+ * @property int|null $workers_count
+ * @property int|null $price
+ * @property int|null $reward
+ * @property string|null $note
+ * @property EventStatus $status
+ * @property \Carbon\CarbonImmutable|null $published_at
+ * @property \Carbon\CarbonImmutable|null $cancelled_at
+ * @property \Carbon\CarbonImmutable|null $completed_at
+ * @property \Carbon\CarbonImmutable $created_at
+ * @property \Carbon\CarbonImmutable $updated_at
+ */
 #[ObservedBy(EventObserver::class)]
 final class Event extends Model
 {
@@ -26,17 +48,6 @@ final class Event extends Model
 
     protected $attributes = [
         'status' => EventStatus::Draft,
-    ];
-
-    protected $casts = [
-        'start_at' => 'datetime',
-        'is_multi_person' => 'boolean',
-        'status' => EventStatus::class,
-        'published_at' => 'datetime',
-        'cancelled_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
     public function newEloquentBuilder($query): EventBuilder
@@ -61,5 +72,27 @@ final class Event extends Model
             EventStatus::Completed => new EventCompletedState($this),
             EventStatus::Cancelled => new EventCancelledState($this),
         };
+    }
+
+    public function setStatus(EventStatus $status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function casts(): array
+    {
+        return [
+            'start_at' => 'datetime',
+            'is_multi_person' => 'boolean',
+            'status' => EventStatus::class,
+            'published_at' => 'datetime',
+            'cancelled_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
     }
 }
