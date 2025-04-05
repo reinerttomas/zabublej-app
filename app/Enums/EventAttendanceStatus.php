@@ -40,7 +40,7 @@ enum EventAttendanceStatus: int implements Comparable
         return $this === self::Pending;
     }
 
-    public function isApproved(): bool
+    public function isConfirm(): bool
     {
         return $this === self::Confirmed;
     }
@@ -48,13 +48,5 @@ enum EventAttendanceStatus: int implements Comparable
     public function isRejected(): bool
     {
         return $this === self::Rejected;
-    }
-
-    public function isApprovedOrRejected(): bool
-    {
-        if ($this->isApproved()) {
-            return true;
-        }
-        return $this->isRejected();
     }
 }

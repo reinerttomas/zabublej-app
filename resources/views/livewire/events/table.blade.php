@@ -6,6 +6,7 @@ use App\Builders\EventAttendanceBuilder;
 use App\Builders\EventBuilder;
 use App\Builders\UserBuilder;
 use App\Enums\Database\Direction;
+use App\Enums\EventAttendanceStatus;
 use App\Enums\EventStatus;
 use App\Enums\Livewire\DialogName;
 use App\Enums\Permission;
@@ -41,13 +42,6 @@ new class extends Component
     {
         return Event::query()
             ->with('confirmedUsers')
-            ->when(Gate::denies('viewAll', Event::class), function (EventBuilder $query): void {
-                $query
-                    ->whereNotStatus(EventStatus::Draft)
-                    ->whereHasEventAttendances(function (EventAttendanceBuilder $query): void {
-                        $query->whereUserId(Auth::userOrFail()->id);
-                    });
-            })
             ->when($this->isSearchSet(), function (EventBuilder $query): void {
                 $query->search($this->search);
             })

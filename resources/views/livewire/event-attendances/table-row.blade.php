@@ -23,30 +23,35 @@ new class extends Component
         $this->modal(DialogName::EventAttendanceReject)->show();
     }
 
+    public function pending(): void
+    {
+        Gate::authorize('update', $this->eventAttendance);
+
+        $this->setStatus(EventAttendanceStatus::Pending);
+    }
+
     public function confirm(): void
     {
         Gate::authorize('update', $this->eventAttendance);
 
-        $this->eventAttendance->update([
-            'status' => EventAttendanceStatus::Confirmed,
-        ]);
-
-        $this->dispatch(LivewireEvent::EventAttendancesRefresh);
-
-        Flux::toast('Schváleno.', variant: 'success');
+        $this->setStatus(EventAttendanceStatus::Confirmed);
     }
 
     public function reject(): void
     {
-        $this->eventAttendance->update([
-            'status' => EventAttendanceStatus::Rejected,
-        ]);
+        $this->setStatus(EventAttendanceStatus::Rejected);
+
+        $this->modal(DialogName::EventAttendanceReject)->close();
+    }
+
+    private function setStatus(EventAttendanceStatus $status): void
+    {
+        $this->eventAttendance->setStatus($status);
+        $this->eventAttendance->save();
 
         $this->dispatch(LivewireEvent::EventAttendancesRefresh);
 
-        $this->modal(DialogName::EventAttendanceReject)->close();
-
-        Flux::toast('Zamítnuto.', variant: 'success');
+        Flux::toast('Uloženo.', variant: 'success');
     }
 }; ?>
 
@@ -71,33 +76,46 @@ new class extends Component
 
     @can('update', $eventAttendance)
         <flux:table.cell class="flex gap-2">
-            <flux:button size="sm" wire:click="confirm">Schválit</flux:button>
-            <flux:button size="sm" wire:click="showDialogReject" class="text-red-600! dark:text-red-500!">
-                Zamítnout
-            </flux:button>
+            @switch($eventAttendance->status)
+                @case(EventAttendanceStatus::Pending)
+                    <flux:button size="sm" wire:click="confirm">Schválit</flux:button>
+                    <flux:button size="sm" wire:click="showDialogReject" class="text-red-600! dark:text-red-500!">
+                        Zamítnout
+                    </flux:button>
 
-            <flux:modal name="{{ DialogName::EventAttendanceReject }}" class="w-full max-w-lg">
-                <form wire:submit="reject">
-                    <div class="space-y-6">
-                        <div>
-                            <flux:heading size="lg">{{ __('Opravdu chcete zamítnout tuto přihlášku?') }}</flux:heading>
-                        </div>
+                    <flux:modal name="{{ DialogName::EventAttendanceReject }}" class="w-full max-w-lg">
+                        <form wire:submit="reject">
+                            <div class="space-y-6">
+                                <div>
+                                    <flux:heading size="lg">
+                                        {{ __('Opravdu chcete zamítnout tuto přihlášku?') }}
+                                    </flux:heading>
+                                </div>
 
-                        <div class="space-y-2">
-                            <flux:text>{{ $eventAttendance->event->name }}</flux:text>
-                            <flux:text>{{ $eventAttendance->user->name }}</flux:text>
-                        </div>
+                                <div class="space-y-2">
+                                    <flux:text>{{ $eventAttendance->event->name }}</flux:text>
+                                    <flux:text>{{ $eventAttendance->user->name }}</flux:text>
+                                </div>
 
-                        <div class="flex gap-2">
-                            <flux:spacer />
-                            <flux:modal.close>
-                                <flux:button variant="ghost">{{ __('Zrušit') }}</flux:button>
-                            </flux:modal.close>
-                            <flux:button type="submit" variant="danger">{{ __('Zamítnout') }}</flux:button>
-                        </div>
-                    </div>
-                </form>
-            </flux:modal>
+                                <div class="flex gap-2">
+                                    <flux:spacer />
+                                    <flux:modal.close>
+                                        <flux:button variant="ghost">{{ __('Zrušit') }}</flux:button>
+                                    </flux:modal.close>
+                                    <flux:button type="submit" variant="danger">{{ __('Zamítnout') }}</flux:button>
+                                </div>
+                            </div>
+                        </form>
+                    </flux:modal>
+
+                    @break
+                @case(EventAttendanceStatus::Rejected)
+                    <flux:button size="sm" wire:click="pending">
+                        {{ __('Obnovit') }}
+                    </flux:button>
+
+                    @break
+            @endswitch
         </flux:table.cell>
     @endcan
 </flux:table.row>

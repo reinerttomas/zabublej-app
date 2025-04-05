@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Events\SetStatusEventAttendanceController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -27,5 +28,9 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Volt::route('events/{event}/edit', 'events.edit')->name('events.edit');
     Volt::route('event-attendances', 'event-attendances.index')->name('event-attendances.index');
 });
+
+Route::get('/event-attendances/{eventAttendance}/status/{status}', SetStatusEventAttendanceController::class)
+    ->name('event-attendances.status')
+    ->middleware('signed');
 
 require __DIR__ . '/auth.php';

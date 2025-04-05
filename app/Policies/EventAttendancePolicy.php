@@ -20,7 +20,6 @@ final readonly class EventAttendancePolicy
 
     public function update(User $user, EventAttendance $eventAttendance): bool
     {
-        return $user->hasPermissionTo(Permission::UpdateEventAttendance)
-            && $eventAttendance->status->isPending();
+        return $user->hasPermissionTo(Permission::UpdateEventAttendance);
     }
 }

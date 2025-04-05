@@ -49,6 +49,7 @@ final readonly class PermissionService
             ],
             RoleEnum::Worker->value => [
                 PermissionEnum::ViewEvent,
+                PermissionEnum::ViewEventAttendance,
             ],
             default => [],
         };

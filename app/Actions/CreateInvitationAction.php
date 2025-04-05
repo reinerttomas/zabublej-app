@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Models\Invitation;
-use App\Notifications\InvitationRegisterNotification;
+use App\Notifications\Invitation\InvitationRegisterNotification;
 use App\ValueObjects\InvitationPayload;
 use Illuminate\Support\Facades\DB;
 use Throwable;

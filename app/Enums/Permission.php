@@ -22,5 +22,6 @@ enum Permission: string
 
     // Event Users
     case ViewAnyEventAttendance = 'view-any-event-attendance';
+    case ViewEventAttendance = 'view-event-attendance';
     case UpdateEventAttendance = 'update-event-attendance';
 }

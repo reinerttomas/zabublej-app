@@ -8,7 +8,7 @@ use App\Enums\Livewire\LivewireEvent;
 use App\Enums\Role;
 use App\Models\Invitation;
 use App\Models\User;
-use App\Notifications\InvitationRegisterNotification;
+use App\Notifications\Invitation\InvitationRegisterNotification;
 use App\ValueObjects\InvitationPayload;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Attributes\Layout;

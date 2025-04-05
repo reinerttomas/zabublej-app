@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Notifications\Events;
 
-use App\Models\Event;
+use App\Models\EventAttendance;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,7 +18,7 @@ final class EventAttendanceDeletedNotification extends Notification implements S
     use SerializesModels;
 
     public function __construct(
-        public readonly Event $event,
+        public readonly EventAttendance $eventAttendance,
     ) {}
 
     /**
@@ -31,16 +31,18 @@ final class EventAttendanceDeletedNotification extends Notification implements S
 
     public function toMail(User $user): MailMessage
     {
+        $event = $this->eventAttendance->event;
+
         return (new MailMessage)
             ->subject('Odebrání z události')
             ->greeting('Ahoj, ' . $user->name)
             ->line('Byli jsi odebrán z události.')
-            ->line('Název: ' . $this->event->name)
-            ->line('Datum: ' . $this->event->start_at->translatedFormatDate())
-            ->line('Čas: ' . $this->event->start_at->translatedFormatTime())
+            ->line('Název: ' . $event->name)
+            ->line('Datum: ' . $event->start_at->translatedFormatDate())
+            ->line('Čas: ' . $event->start_at->translatedFormatTime())
             ->when(
-                $this->event->location,
-                fn (MailMessage $message) => $message->line('Místo: ' . $this->event->location)
+                $event->location,
+                fn (MailMessage $message) => $message->line('Místo: ' . $event->location)
             )
             ->line('V případě dotazů kontaktujte organizátora.');
     }

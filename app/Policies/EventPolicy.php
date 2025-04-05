@@ -16,7 +16,7 @@ final readonly class EventPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyPermission(Permission::ViewAnyEvent, Permission::ViewEvent);
+        return $user->hasAnyPermission(Permission::ViewAnyEvent);
     }
 
     public function viewAll(User $user): bool
@@ -24,7 +24,7 @@ final readonly class EventPolicy
         return $user->hasPermissionTo(Permission::ViewAnyEvent);
     }
 
-    public function view(User $user): bool
+    public function view(User $user, Event $event): bool
     {
         if ($user->hasPermissionTo(Permission::ViewAnyEvent)) {
             return true;
@@ -32,6 +32,7 @@ final readonly class EventPolicy
 
         if ($user->hasPermissionTo(Permission::ViewEvent)) {
             return $user->eventAttendances()
+                ->whereEventId($event->id)
                 ->whereUserId($user->id)
                 ->whereStatus(EventAttendanceStatus::Confirmed)
                 ->exists();
@@ -72,7 +73,7 @@ final readonly class EventPolicy
             && ! $event->status->isCompleted();
     }
 
-    public function signIn(User $user, Event $event): bool
+    public function register(User $user, Event $event): bool
     {
         return $event->eventAttendances()
             ->whereUserId($user->id)

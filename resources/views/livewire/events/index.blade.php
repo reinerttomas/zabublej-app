@@ -23,11 +23,11 @@ new class extends Component
 }; ?>
 
 <section class="w-full">
-    <div class="relative mb-6 w-full">
+    <div class="relative w-full">
         <div class="flex items-center justify-between">
             <div>
-                <flux:heading size="xl" level="1">{{ __('Události') }}</flux:heading>
-                <flux:subheading size="lg" class="mb-6">{{ __('Správa událostí a bublinářů') }}</flux:subheading>
+                <flux:heading size="xl">{{ __('Události') }}</flux:heading>
+                <flux:subheading>{{ __('Správa událostí a bublinářů') }}</flux:subheading>
             </div>
             <div>
                 @can('create', Event::class)
@@ -37,7 +37,8 @@ new class extends Component
                 @endcan
             </div>
         </div>
-        <flux:separator variant="subtle" />
+
+        <flux:separator variant="subtle" class="my-6" />
     </div>
 
     <livewire:events.table />

@@ -16,11 +16,11 @@ use Livewire\Volt\Component;
 new class extends Component
 {
     public Event $event;
-    public ?EventAttendance $eventUser = null;
+    public ?EventAttendance $eventAttendance = null;
 
     public function mount(): void
     {
-        $this->eventUser = EventAttendance::query()
+        $this->eventAttendance = EventAttendance::query()
             ->whereEventId($this->event->id)
             ->whereUserId(Auth::userOrFail()->id)
             ->first();
@@ -28,12 +28,12 @@ new class extends Component
 
     public function showDialogSignIn(): void
     {
-        $this->modal(DialogName::EventSignIn)->show();
+        $this->modal(DialogName::EventRegister)->show();
     }
 
-    public function signIn(): void
+    public function register(): void
     {
-        Gate::authorize('signIn', $this->event);
+        Gate::authorize('register', $this->event);
 
         // Admin will be automatically approved
         if (Gate::allows('update', $this->event)) {
@@ -43,27 +43,27 @@ new class extends Component
         }
 
         $this->event->eventAttendances()->create([
-            ...$data ?? [],
             'user_id' => Auth::userOrFail()->id,
+            ...$data ?? [],
         ]);
 
         $this->dispatch(LivewireEvent::EventsRefresh);
 
-        $this->modal(DialogName::EventSignIn)->close();
+        $this->modal(DialogName::EventRegister)->close();
 
-        Flux::toast('Sent.', variant: 'success');
+        Flux::toast('Uloženo.', variant: 'success');
     }
 }; ?>
 
 <flux:card>
     <div class="space-y-4">
-        <div class="flex flex-col space-y-1.5">
-            <div class="flex justify-between">
+        <div class="flex flex-col space-y-2">
+            <div class="flex flex-col-reverse flex-wrap items-start gap-2 md:flex-row md:justify-between">
                 <flux:heading size="lg">{{ $event->name }}</flux:heading>
 
-                @if ($eventUser)
-                    <flux:badge color="{{ $eventUser->status->badge() }}" variant="pill" size="sm">
-                        {{ $eventUser->status->label() }}
+                @if ($eventAttendance)
+                    <flux:badge color="{{ $eventAttendance->status->badge() }}" variant="pill" size="sm">
+                        {{ $eventAttendance->status->label() }}
                     </flux:badge>
                 @else
                     <flux:badge variant="pill" size="sm">
@@ -95,7 +95,7 @@ new class extends Component
             @endif
         </div>
 
-        @canany(['view', 'signIn'], $event)
+        @canany(['view', 'register'], $event)
             <div class="flex items-center gap-2">
                 @can('view', $event)
                     <flux:button href="{{ route('events.show', $event) }}" size="sm" wire:navigate>
@@ -103,13 +103,13 @@ new class extends Component
                     </flux:button>
                 @endcan
 
-                @can('signIn', $event)
+                @can('register', $event)
                     <flux:button variant="primary" size="sm" wire:click="showDialogSignIn">
                         {{ __('Přihlásit se') }}
                     </flux:button>
 
-                    <flux:modal name="{{ DialogName::EventSignIn }}" class="w-full max-w-lg">
-                        <form wire:submit="signIn" class="space-y-6">
+                    <flux:modal name="{{ DialogName::EventRegister }}" class="w-full max-w-lg">
+                        <form wire:submit="register" class="space-y-6">
                             <flux:heading size="lg">{{ $event->name }}</flux:heading>
 
                             <div class="space-y-2">

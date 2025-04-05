@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Enums\Role;
 use App\Models\Invitation;
 use App\Models\User;
-use App\Notifications\InvitationRegisterNotification;
+use App\Notifications\Invitation\InvitationRegisterNotification;
 use Livewire\Volt\Volt;
 
 use function Pest\Faker\fake;

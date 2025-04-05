@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Notifications;
+namespace App\Notifications\Invitation;
 
 use App\Models\Invitation;
 use Illuminate\Bus\Queueable;
@@ -40,7 +40,7 @@ final class InvitationRegisterNotification extends Notification
             )
             ->line('Kliknutím na tlačítko níže si můžete vytvořit účet.')
             ->action('Registrovat se', route('register', $this->invitation))
-            ->line('Tato pozvánka je platná do ' . $this->invitation->expires_at->format('d.m.Y H:i'))
+            ->line('Tato pozvánka je platná do ' . $this->invitation->expires_at->translatedFormatDateTime())
             ->line('Pokud jste o pozvánku nežádali, můžete tento email ignorovat.');
     }
 }

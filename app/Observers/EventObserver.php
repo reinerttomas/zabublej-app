@@ -27,8 +27,6 @@ final readonly class EventObserver
 
     public function updated(Event $event): void
     {
-        // Event was published
-        // todo: odeslat notifikace
         // Event was cancelled
         if ($event->wasChanged('status') && ($event->status->isCancelled() && $event->status->notEqual($event->getOriginal('status')))) {
             $this->notifyUsers($event, new EventCancelledNotification($event));

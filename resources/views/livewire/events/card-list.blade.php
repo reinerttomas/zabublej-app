@@ -92,17 +92,19 @@ new class extends Component
 }; ?>
 
 <div class="space-y-4">
-    <flux:tabs variant="segmented" wire:model="eventTab" wire:change="resetPerPage">
+    <flux:tabs variant="segmented" wire:model="eventTab" wire:change="resetPerPage" class="w-full">
         <flux:tab name="{{ EventTab::MyEvents }}" icon="calendar-check-2">
-            {{ __('Moje události') }}
+            <span class="hidden sm:inline">{{ __('Moje události') }}</span>
+            <span class="sm:hidden">{{ __('Moje') }}</span>
             <span
                 class="rounded-full bg-zinc-400/15 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-white/10 dark:text-zinc-200"
             >
                 {{ $this->myEventsCount }}
             </span>
         </flux:tab>
-        <flux:tab name="{{ EventTab::AvailableEvents }}" icon="calendar-clock" class="hidden sm:inline-flex">
-            {{ __('Dostupné události') }}
+        <flux:tab name="{{ EventTab::AvailableEvents }}" icon="calendar-clock">
+            <span class="hidden sm:inline">{{ __('Dostupné události') }}</span>
+            <span class="sm:hidden">{{ __('Dostupné') }}</span>
             <span
                 class="rounded-full bg-zinc-400/15 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-white/10 dark:text-zinc-200"
             >

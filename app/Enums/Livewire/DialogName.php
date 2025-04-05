@@ -12,7 +12,7 @@ enum DialogName: string
     case EventCreate = 'event-create';
     case EventUpdate = 'event-update';
     case EventDelete = 'event-delete';
-    case EventSignIn = 'event-sign-in';
+    case EventRegister = 'event-register';
     case EventAttendanceCreate = 'event-attendance-create';
     case EventAttendanceReject = 'event-attendance-reject';
 }

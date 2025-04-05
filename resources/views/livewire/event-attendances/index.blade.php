@@ -18,15 +18,30 @@ new class extends Component
     }
 }; ?>
 
-<section class="w-full">
-    <div class="relative mb-6 w-full">
+<section class="w-full space-y-6">
+    <div class="relative w-full">
         <div>
-            <flux:heading size="xl" level="1">{{ __('Docházka') }}</flux:heading>
-            <flux:subheading size="lg" class="mb-6">
+            <flux:heading size="xl">{{ __('Docházka') }}</flux:heading>
+            <flux:subheading>
                 {{ __('Schválit nebo zamítnout přihlášky bublinářů na události') }}
             </flux:subheading>
         </div>
-        <flux:separator variant="subtle" />
+
+        <flux:separator variant="subtle" class="my-6" />
+    </div>
+
+    <div class="space-y-4">
+        @if (session('success'))
+            <flux:callout variant="success" icon="check-circle" heading="{{ session('success') }}" />
+        @endif
+
+        @if (session('warning'))
+            <flux:callout variant="warning" icon="exclamation-circle" heading="{{ session('warning') }}" />
+        @endif
+
+        @if (session('error'))
+            <flux:callout variant="danger" icon="x-circle" heading="{{ session('error') }}" />
+        @endif
     </div>
 
     <livewire:event-attendances.table />
