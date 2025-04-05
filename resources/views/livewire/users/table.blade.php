@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Builders\UserBuilder;
+use App\Enums\Database\Direction;
 use App\Enums\Livewire\DialogName;
 use App\Enums\Permission;
 use App\Livewire\WithPagination;
@@ -20,6 +21,12 @@ new class extends Component
     use WithPagination;
     use WithSearching;
     use WithSorting;
+
+    public function boot(): void
+    {
+        $this->defaultSortBy('id');
+        $this->defaultSortDirection(Direction::ASC);
+    }
 
     /**
      * @return LengthAwarePaginator<User>
@@ -54,7 +61,7 @@ new class extends Component
         <flux:input
             class="md:max-w-sm"
             icon="magnifying-glass"
-            placeholder="{{ __('Search ...') }}"
+            placeholder="{{ __('Vyhledat ...') }}"
             wire:model.live.debounce.300ms="search"
             clearable
         />
@@ -68,7 +75,7 @@ new class extends Component
                 :direction="$sortDirection->value"
                 wire:click="sort('name')"
             >
-                {{ __('Name') }}
+                {{ __('Jméno') }}
             </flux:table.column>
             <flux:table.column
                 sortable
@@ -78,9 +85,9 @@ new class extends Component
             >
                 {{ __('Email') }}
             </flux:table.column>
-            <flux:table.column>{{ __('Phone') }}</flux:table.column>
-            <flux:table.column>{{ __('Last login at') }}</flux:table.column>
-            <flux:table.column>{{ __('Status') }}</flux:table.column>
+            <flux:table.column>{{ __('Telefon') }}</flux:table.column>
+            <flux:table.column>{{ __('Poslední přihlášení') }}</flux:table.column>
+            <flux:table.column>{{ __('Stav') }}</flux:table.column>
         </flux:table.columns>
 
         <flux:table.rows>

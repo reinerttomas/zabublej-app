@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Models\Event;
-use App\Notifications\EventAssignmentNotification;
-use App\Notifications\EventCancelledNotification;
+use App\Notifications\Events\EventCancelledNotification;
+use App\Notifications\Events\EventUpdatedNotification;
 use App\Services\EventService;
 use Illuminate\Notifications\Notification;
 
@@ -27,23 +27,23 @@ final readonly class EventObserver
 
     public function updated(Event $event): void
     {
-        if ($event->wasChanged('status')) {
-            // Event was published
+        // Event was published
+        // todo: odeslat notifikace
+        // Event was cancelled
+        if ($event->wasChanged('status') && ($event->status->isCancelled() && $event->status->notEqual($event->getOriginal('status')))) {
+            $this->notifyUsers($event, new EventCancelledNotification($event));
+        }
 
-            if (
-                $event->status->isPublished()
-                && $event->status->notEqual($event->getOriginal('status'))
-            ) {
-                $this->notifyUsers($event, new EventAssignmentNotification($event));
-            }
-
-            // Event was cancelled
-            if (
-                $event->status->isCancelled()
-                && $event->status->notEqual($event->getOriginal('status'))
-            ) {
-                $this->notifyUsers($event, new EventCancelledNotification($event));
-            }
+        if (
+            $event->wasChanged('name')
+            || $event->wasChanged('description')
+            || $event->wasChanged('starts_at')
+            || $event->wasChanged('location')
+            || $event->wasChanged('contact_person')
+            || $event->wasChanged('contact_phone')
+            || $event->wasChanged('note')
+        ) {
+            $this->notifyUsers($event, new EventUpdatedNotification($event));
         }
     }
 

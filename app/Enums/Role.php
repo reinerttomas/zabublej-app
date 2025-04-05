@@ -8,7 +8,7 @@ enum Role: string
 {
     case SuperAdmin = 'super-admin';
     case Admin = 'admin';
-    case Staff = 'staff';
+    case Worker = 'worker';
 
     /**
      * @return list<Role>
@@ -17,7 +17,16 @@ enum Role: string
     {
         return [
             self::Admin,
-            self::Staff,
+            self::Worker,
         ];
+    }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::SuperAdmin => 'Super Admin',
+            self::Admin => 'Admin',
+            self::Worker => 'Bublinář',
+        };
     }
 }

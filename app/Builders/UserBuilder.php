@@ -21,19 +21,14 @@ final class UserBuilder extends Builder
             ->orWhere('phone', 'like', $value);
     }
 
-    public function whereHasEvents(Closure $condition): self
+    public function whereHasEventAttendances(?Closure $condition = null): self
     {
-        return $this->whereHas('events', $condition);
+        return $this->whereHas('eventAttendances', $condition);
     }
 
-    public function whereDoesntHaveEvents(Closure $condition): self
+    public function whereDoesntHaveEventAttendances(?Closure $condition = null): self
     {
-        return $this->whereDoesntHave('events', $condition);
-    }
-
-    public function whereHasRole(Closure $condition): self
-    {
-        return $this->whereHas('roles', $condition);
+        return $this->whereDoesntHave('eventAttendances', $condition);
     }
 
     public function whereEmail(string $email): self

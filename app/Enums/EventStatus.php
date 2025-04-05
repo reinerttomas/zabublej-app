@@ -7,22 +7,24 @@ namespace App\Enums;
 use App\Contracts\Comparable;
 
 /**
- * @implements Comparable<EventStatus>
+ * @implements Comparable<$this>
  */
 enum EventStatus: int implements Comparable
 {
-    case Draft = 0;
-    case Published = 1;
-    case Cancelled = 2;
-    case Completed = 3;
+    use HasComparable;
+
+    case Draft = 1;
+    case Published = 2;
+    case Cancelled = 3;
+    case Completed = 4;
 
     public function label(): string
     {
         return match ($this) {
-            self::Draft => 'Draft',
-            self::Published => 'Open',
-            self::Cancelled => 'Cancelled',
-            self::Completed => 'Completed',
+            self::Draft => 'Návrh',
+            self::Published => 'Zvejněno',
+            self::Cancelled => 'Zrušeno',
+            self::Completed => 'Hotovo',
         };
     }
 
@@ -46,14 +48,9 @@ enum EventStatus: int implements Comparable
         };
     }
 
-    public function equal(Comparable $other): bool
+    public function isDraft(): bool
     {
-        return $this === $other;
-    }
-
-    public function notEqual(Comparable $other): bool
-    {
-        return $this !== $other;
+        return $this === self::Draft;
     }
 
     public function isPublished(): bool
@@ -64,5 +61,10 @@ enum EventStatus: int implements Comparable
     public function isCancelled(): bool
     {
         return $this === self::Cancelled;
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this === self::Completed;
     }
 }

@@ -6,7 +6,7 @@ use App\Enums\EventStatus;
 use App\Models\Event;
 use App\Models\User;
 use App\Notifications\EventAssignmentNotification;
-use App\Notifications\EventCancelledNotification;
+use App\Notifications\Events\EventCancelledNotification;
 use Livewire\Volt\Volt;
 
 use function Pest\Faker\fake;
@@ -153,8 +153,8 @@ it('allows admin to update event', function (User $user, Event $event, array $da
         ->set('contactEmail', $data['contactEmail'])
         ->set('contactPhone', $data['contactPhone'])
         ->set('isMultiPerson', $data['isMultiPerson'])
-        ->set('childrenCount', $data['childrenCount'])
-        ->set('workersCount', $data['workersCount'])
+        ->set('estimatedChildrenCount', $data['estimatedChildrenCount'])
+        ->set('maxWorkers', $data['maxWorkers'])
         ->set('price', $data['price'])
         ->set('reward', $data['reward'])
         ->set('note', $data['note'])
@@ -172,8 +172,8 @@ it('allows admin to update event', function (User $user, Event $event, array $da
         ->contact_email->toEqual($data['contactEmail'])
         ->contact_phone->toEqual($data['contactPhone'])
         ->is_multi_person->toEqual($data['isMultiPerson'])
-        ->children_count->toEqual($data['childrenCount'])
-        ->workers_count->toEqual($data['workersCount'])
+        ->estimated_children_count->toEqual($data['estimatedChildrenCount'])
+        ->max_workers->toEqual($data['maxWorkers'])
         ->price->toEqual($data['price'])
         ->reward->toEqual($data['reward']);
 })->with([
@@ -193,8 +193,8 @@ it('allows admin to update event', function (User $user, Event $event, array $da
                 'contactEmail' => fake()->optional()->email(),
                 'contactPhone' => fake()->optional()->e164PhoneNumber(),
                 'isMultiPerson' => fake()->optional()->boolean(),
-                'childrenCount' => fake()->optional()->numberBetween(10, 100),
-                'workersCount' => fake()->optional()->numberBetween(1, 3),
+                'estimatedChildrenCount' => fake()->optional()->numberBetween(10, 100),
+                'maxWorkers' => fake()->optional()->numberBetween(1, 3),
                 'price' => fake()->optional()->numberBetween(10000, 50000),
                 'reward' => fake()->optional()->numberBetween(1000, 5000),
                 'note' => fake()->optional()->text(),
@@ -217,8 +217,8 @@ it('allows admin to update event', function (User $user, Event $event, array $da
                 'contactEmail' => fake()->optional()->email(),
                 'contactPhone' => fake()->optional()->e164PhoneNumber(),
                 'isMultiPerson' => fake()->optional()->boolean(),
-                'childrenCount' => fake()->optional()->numberBetween(10, 100),
-                'workersCount' => fake()->optional()->numberBetween(1, 3),
+                'estimatedChildrenCount' => fake()->optional()->numberBetween(10, 100),
+                'maxWorkers' => fake()->optional()->numberBetween(1, 3),
                 'price' => fake()->optional()->numberBetween(10000, 50000),
                 'reward' => fake()->optional()->numberBetween(1000, 5000),
                 'note' => fake()->optional()->text(),

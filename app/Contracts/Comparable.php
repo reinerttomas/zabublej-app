@@ -18,4 +18,14 @@ interface Comparable
      * @param  T  $other
      */
     public function notEqual(self $other): bool;
+
+    /**
+     * @param  list<T>  $others
+     */
+    public function equalAll(array $others): bool;
+
+    /**
+     * @param  list<T>  $others
+     */
+    public function notEqualAll(array $others): bool;
 }

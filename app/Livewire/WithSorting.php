@@ -8,8 +8,8 @@ use App\Enums\Database\Direction;
 
 trait WithSorting
 {
-    public string $sortBy = 'id';
-    public Direction $sortDirection = Direction::DESC;
+    public string $sortBy;
+    public Direction $sortDirection;
 
     public function sort(string $column): void
     {
@@ -18,6 +18,20 @@ trait WithSorting
         } else {
             $this->sortBy = $column;
             $this->sortDirection = Direction::ASC;
+        }
+    }
+
+    public function defaultSortBy(string $sortBy): void
+    {
+        if (! isset($this->sortBy)) {
+            $this->sortBy = $sortBy;
+        }
+    }
+
+    public function defaultSortDirection(Direction $sortDirection): void
+    {
+        if (! isset($this->sortDirection)) {
+            $this->sortDirection = $sortDirection;
         }
     }
 }

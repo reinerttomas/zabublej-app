@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Builders\EventAttendanceBuilder;
 use App\Builders\EventBuilder;
 use App\Builders\UserBuilder;
+use App\Enums\Database\Direction;
 use App\Enums\EventStatus;
 use App\Enums\Livewire\DialogName;
 use App\Enums\Permission;
@@ -25,21 +27,25 @@ new class extends Component
     use WithSearching;
     use WithSorting;
 
+    public function boot(): void
+    {
+        $this->defaultSortBy('start_at');
+        $this->defaultSortDirection(Direction::DESC);
+    }
+
     /**
      * @return LengthAwarePaginator<Event>
      */
     #[Computed]
     public function events(): LengthAwarePaginator
     {
-        $user = Auth::userOrFail();
-
         return Event::query()
-            ->with('users')
-            ->when(! Gate::allows('viewAll', Event::class), function (EventBuilder $query) use ($user): void {
+            ->with('confirmedUsers')
+            ->when(Gate::denies('viewAll', Event::class), function (EventBuilder $query): void {
                 $query
-                    ->whereStatus(EventStatus::Draft, not: true)
-                    ->whereHasUsers(function (UserBuilder $query) use ($user): void {
-                        $query->whereKey($user->id);
+                    ->whereNotStatus(EventStatus::Draft)
+                    ->whereHasEventAttendances(function (EventAttendanceBuilder $query): void {
+                        $query->whereUserId(Auth::userOrFail()->id);
                     });
             })
             ->when($this->isSearchSet(), function (EventBuilder $query): void {
@@ -68,7 +74,7 @@ new class extends Component
         <flux:input
             class="md:max-w-sm"
             icon="magnifying-glass"
-            placeholder="{{ __('Search ...') }}"
+            placeholder="{{ __('Vyhledat ...') }}"
             wire:model.live.debounce.300ms="search"
             clearable
         />
@@ -84,9 +90,6 @@ new class extends Component
             >
                 {{ __('Název') }}
             </flux:table.column>
-            <flux:table.column>{{ __('Adresa') }}</flux:table.column>
-            <flux:table.column>{{ __('Děti') }}</flux:table.column>
-            <flux:table.column>{{ __('Bublináři') }}</flux:table.column>
             <flux:table.column
                 sortable
                 :sorted="$sortBy === 'start_at'"
@@ -96,6 +99,9 @@ new class extends Component
                 {{ __('Datum') }}
             </flux:table.column>
             <flux:table.column>{{ __('Čas') }}</flux:table.column>
+            <flux:table.column>{{ __('Výplata') }}</flux:table.column>
+            <flux:table.column>{{ __('Typ programu') }}</flux:table.column>
+            <flux:table.column>{{ __('Bublináři') }}</flux:table.column>
             <flux:table.column>{{ __('Stav') }}</flux:table.column>
         </flux:table.columns>
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\EventAttendanceStatus;
 use App\Enums\Permission;
 use App\Models\Event;
 use App\Models\User;
@@ -23,19 +24,17 @@ final readonly class EventPolicy
         return $user->hasPermissionTo(Permission::ViewAnyEvent);
     }
 
-    public function viewPrice(User $user): bool
-    {
-        return $user->hasPermissionTo(Permission::ViewPriceEvent);
-    }
-
-    public function view(User $user, Event $event): bool
+    public function view(User $user): bool
     {
         if ($user->hasPermissionTo(Permission::ViewAnyEvent)) {
             return true;
         }
 
         if ($user->hasPermissionTo(Permission::ViewEvent)) {
-            return $user->events()->whereKey($event->id)->exists();
+            return $user->eventAttendances()
+                ->whereUserId($user->id)
+                ->whereStatus(EventAttendanceStatus::Confirmed)
+                ->exists();
         }
 
         return false;
@@ -54,5 +53,29 @@ final readonly class EventPolicy
     public function delete(User $user): bool
     {
         return $user->hasPermissionTo(Permission::DeleteEvent);
+    }
+
+    public function addWorker(User $user, Event $event): bool
+    {
+        return $user->hasPermissionTo(Permission::UpdateEvent)
+            && $event->start_at->isFuture()
+            && ! $event->status->isCancelled()
+            && ! $event->status->isCompleted()
+            && $event->getCapacity()->hasFreeCapacity();
+    }
+
+    public function removeWorker(User $user, Event $event): bool
+    {
+        return $user->hasPermissionTo(Permission::UpdateEvent)
+            && $event->start_at->isFuture()
+            && ! $event->status->isCancelled()
+            && ! $event->status->isCompleted();
+    }
+
+    public function signIn(User $user, Event $event): bool
+    {
+        return $event->eventAttendances()
+            ->whereUserId($user->id)
+            ->doesntExist();
     }
 }

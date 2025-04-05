@@ -1,6 +1,7 @@
 @php
     use App\Enums\Permission;
     use App\Models\Event;
+    use App\Models\EventAttendance;
     use App\Models\User;
 @endphp
 
@@ -39,7 +40,7 @@
                             :current="request()->routeIs('users.index')"
                             wire:navigate
                         >
-                            {{ __('Users') }}
+                            {{ __('Uživatelé') }}
                         </flux:navlist.item>
                     @endcan
 
@@ -50,7 +51,18 @@
                             :current="request()->routeIs('events.index')"
                             wire:navigate
                         >
-                            {{ __('Events') }}
+                            {{ __('Události') }}
+                        </flux:navlist.item>
+                    @endcan
+
+                    @can('viewAny', EventAttendance::class)
+                        <flux:navlist.item
+                            icon="clipboard-list"
+                            :href="route('event-attendances.index')"
+                            :current="request()->routeIs('event-attendances.index')"
+                            wire:navigate
+                        >
+                            {{ __('Docházka') }}
                         </flux:navlist.item>
                     @endcan
                 </flux:navlist.group>

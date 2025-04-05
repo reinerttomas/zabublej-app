@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\States\Events;
 
-use App\Contracts\EventState;
+use App\Contracts\Events\EventState;
 use App\Exceptions\NotImplementedException;
 use App\Models\Event;
 

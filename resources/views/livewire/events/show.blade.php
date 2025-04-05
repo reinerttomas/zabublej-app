@@ -60,10 +60,10 @@ new class extends Component
                         <flux:heading size="lg">{{ __('Datum a čas') }}</flux:heading>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div class="flex items-center gap-2">
-                                <span>15. července 2025</span>
+                                <span>{{ $event->start_at->translatedFormatDate() }}</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span>10:00</span>
+                                <span>{{ $event->start_at->translatedFormatTime() }}</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-2">
@@ -83,7 +83,7 @@ new class extends Component
                         </div>
                         <div class="flex items-center gap-2">
                             {{ __('Počet děti:') }}
-                            <strong>{{ $event->children_count }}</strong>
+                            <strong>{{ $event->estimated_children_count }}</strong>
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,7 @@ new class extends Component
                         <flux:heading size="lg">{{ __('Finanční informace') }}</flux:heading>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            @can('viewPrice', $this->event)
+                            @can('update', $this->event)
                                 <div class="flex items-center gap-2">
                                     <div>{{ __('Cena události:') }}</div>
                                     <div class="font-bold">{{ $event->price }}&nbsp;Kč</div>
@@ -122,9 +122,12 @@ new class extends Component
                         </div>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div class="flex items-center gap-2">
-                                <div>{{ $event->contact_email }}</div>
-                            </div>
+                            @can('update', $this->event)
+                                <div class="flex items-center gap-2">
+                                    <div>{{ $event->contact_email }}</div>
+                                </div>
+                            @endcan
+
                             <div class="flex items-center gap-2">
                                 <div>{{ $event->contact_phone }}</div>
                             </div>

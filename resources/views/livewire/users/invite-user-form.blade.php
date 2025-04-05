@@ -47,35 +47,35 @@ new class extends Component
 
 <form wire:submit="invite" class="space-y-6">
     <div>
-        <flux:heading size="lg">{{ __('Invite User') }}</flux:heading>
+        <flux:heading size="lg">{{ __('Odeslat pozvánku') }}</flux:heading>
         <flux:subheading>
-            {{ __('Invite new user to join your team by sending them an email invitation. Assign a role to define their access level.') }}
+            {{ __('Pozvěte nového uživatele do týmu zasláním e-mailové pozvánky. Přiřazením role určete úroveň jejich přístupu.') }}
         </flux:subheading>
     </div>
 
-    <flux:input label="{{ __('Name') }}" wire:model="name" />
+    <flux:input label="{{ __('Jméno') }}" wire:model="name" />
     <flux:input label="{{ __('Email') }}" wire:model="email" />
 
-    <flux:select variant="combobox" label="{{ __('Role') }}" placeholder="Choose role..." wire:model="role">
+    <flux:select variant="combobox" label="{{ __('Role') }}" placeholder="Zvolte..." wire:model="role">
         @foreach (Role::roles() as $role)
-            <flux:select.option :value="$role->value">{{ $role->name }}</flux:select.option>
+            <flux:select.option :value="$role->value">{{ $role->label() }}</flux:select.option>
         @endforeach
     </flux:select>
 
     <flux:textarea
-        label="{{ __('Description') }}"
-        placeholder="Add a personal note to your invitation"
+        label="{{ __('Popis') }}"
+        placeholder="Napište k pozvánce osobní poznámku"
         wire:model="description"
-        badge="Optional"
+        badge="Nepovinné"
     />
 
     <div class="flex gap-2">
         <flux:spacer />
 
         <flux:modal.close>
-            <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+            <flux:button variant="ghost">{{ __('Zrušit') }}</flux:button>
         </flux:modal.close>
 
-        <flux:button type="submit" variant="primary">{{ __('Invite') }}</flux:button>
+        <flux:button type="submit" variant="primary">{{ __('Odelat pozvánku') }}</flux:button>
     </div>
 </form>

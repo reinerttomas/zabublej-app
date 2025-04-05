@@ -26,17 +26,17 @@ new class extends Component
             {{ $event->name }}
         </flux:link>
     </flux:table.cell>
-    <flux:table.cell>{{ $event->location }}</flux:table.cell>
-    <flux:table.cell>{{ $event->children_count }}</flux:table.cell>
+    <flux:table.cell>{{ $event->start_at?->translatedFormatDate() }}</flux:table.cell>
+    <flux:table.cell>{{ $event->start_at?->translatedFormatTime() }}</flux:table.cell>
+    <flux:table.cell>{{ $event->formattedReward() }}</flux:table.cell>
+    <flux:table.cell></flux:table.cell>
     <flux:table.cell>
-        @foreach ($event->users as $user)
-            <flux:tooltip content="{{ $user->name }}">
-                <flux:badge size="sm">{{ $user->initials() }}</flux:badge>
-            </flux:tooltip>
-        @endforeach
+        <flux:avatar.group>
+            @foreach ($event->confirmedUsers as $user)
+                <flux:avatar tooltip="{{ $user->name }}" name="{{ $user->name }}" size="sm" circle />
+            @endforeach
+        </flux:avatar.group>
     </flux:table.cell>
-    <flux:table.cell>{{ $event->start_at?->formatDate() }}</flux:table.cell>
-    <flux:table.cell>{{ $event->start_at?->formatTime() }}</flux:table.cell>
     <flux:table.cell>
         <flux:badge color="{{ $event->status->badge() }}" size="sm">
             {{ $event->status->label() }}
@@ -55,7 +55,7 @@ new class extends Component
                             href="{{ route('events.edit', $event) }}"
                             wire:navigate
                         >
-                            <div>{{ __('Edit') }}</div>
+                            <div>{{ __('Upravit') }}</div>
                             <flux:icon.square-pen variant="micro" />
                         </flux:menu.item>
                     @endcan
@@ -64,7 +64,7 @@ new class extends Component
 
                     @can('delete', $event)
                         <flux:menu.item class="justify-between" variant="danger" wire:click="showDialogDelete">
-                            <div>{{ __('Delete') }}</div>
+                            <div>{{ __('Smazat') }}</div>
                             <flux:icon.trash-2 variant="micro" />
                         </flux:menu.item>
                     @endcan
@@ -72,17 +72,26 @@ new class extends Component
             </flux:dropdown>
 
             @can('delete', $event)
-                <flux:modal name="{{ DialogName::EventDelete }}" class="min-w-[22rem]">
+                <flux:modal name="{{ DialogName::EventDelete }}" class="w-full max-w-lg">
                     <form class="space-y-6" wire:submit="$parent.delete({{ $event->id }})">
                         <div>
-                            <flux:heading size="lg">{{ __('Delete event') }}</flux:heading>
+                            <flux:heading size="lg">
+                                {{ __('Opravdu chcete odstranit tuto událost?') }}
+                            </flux:heading>
+                        </div>
 
-                            <flux:subheading>
-                                <p>
-                                    {{ __('Are you sure you want to delete') }}
-                                    <strong>{{ $event->name }}</strong>
-                                </p>
-                            </flux:subheading>
+                        <div class="space-y-2">
+                            <flux:text variant="strong" class="flex items-center gap-2">
+                                {{ $event->name }}
+                            </flux:text>
+                            <flux:text class="flex items-center gap-2">
+                                <flux:icon.calendar-days variant="micro" />
+                                {{ $event->start_at->translatedFormatDate() }}
+                            </flux:text>
+                            <flux:text class="flex items-center gap-2">
+                                <flux:icon.clock variant="micro" />
+                                {{ $event->start_at->translatedFormatTime() }}
+                            </flux:text>
                         </div>
 
                         <div class="flex gap-2">

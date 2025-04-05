@@ -20,17 +20,49 @@ final class EventBuilder extends Builder
             ->orWhere('location', 'like', $value);
     }
 
-    public function whereHasUsers(Closure $condition): self
+    public function whereHasEventAttendances(?Closure $condition = null): self
     {
-        return $this->whereHas('users', $condition);
+        return $this->whereHas('eventAttendances', $condition);
     }
 
-    public function whereStatus(EventStatus $status, bool $not = false): self
+    public function whereDoesntHaveEventAttendances(?Closure $condition = null): self
     {
-        $not
-            ? $this->whereNot('status', $status)
+        return $this->whereDoesntHave('eventAttendances', $condition);
+    }
+
+    public function whereStatus(EventStatus ...$status): self
+    {
+        is_array($status)
+            ? $this->whereIn('status', $status)
             : $this->where('status', $status);
 
         return $this;
+    }
+
+    public function whereNotStatus(EventStatus ...$status): self
+    {
+        is_array($status)
+            ? $this->whereNotIn('status', $status)
+            : $this->whereNot('status', $status);
+
+        return $this;
+    }
+
+    public function withPendingWorkersCount(): self
+    {
+        return $this->withCount([
+            'eventAttendances as pending_users_count' => function (EventAttendanceBuilder $query): void {
+                $query->pending();
+            },
+        ]);
+    }
+
+    public function withApprovedWorkersCount(): self
+    {
+        return $this->withCount([
+            'eventAttendances as approved_users_count' => function (EventAttendanceBuilder $query): void {
+                $query->approved();
+            },
+        ]);
     }
 }

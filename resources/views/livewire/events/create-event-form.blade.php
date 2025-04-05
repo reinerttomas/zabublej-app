@@ -32,7 +32,7 @@ new class extends Component
             'start_at' => CarbonImmutable::parse($this->startDate . ' ' . $this->startTime),
         ]);
 
-        Flux::toast('Created.', variant: 'success');
+        Flux::toast('Uloženo.', variant: 'success');
 
         $this->redirect(route('events.edit', $event), navigate: true);
     }
@@ -40,24 +40,23 @@ new class extends Component
 
 <form wire:submit="create" class="space-y-6">
     <div>
-        <flux:heading size="lg">{{ __('Create event') }}</flux:heading>
-        <flux:subheading>{{ __('Creating a event') }}</flux:subheading>
+        <flux:heading size="lg">{{ __('Nová událost') }}</flux:heading>
     </div>
 
-    <flux:input label="{{ __('Name') }}" wire:model="name" />
+    <flux:input label="{{ __('Název') }}" wire:model="name" />
 
     <div class="grid gap-4 sm:grid-cols-2">
-        <flux:input type="date" label="{{ __('Start Date') }}" wire:model="startDate" />
-        <flux:input type="time" label="{{ __('Start Time') }}" wire:model="startTime" />
+        <flux:input type="date" label="{{ __('Datum') }}" wire:model="startDate" />
+        <flux:input type="time" label="{{ __('Čas') }}" wire:model="startTime" />
     </div>
 
     <div class="flex gap-2">
         <flux:spacer />
 
         <flux:modal.close>
-            <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+            <flux:button variant="ghost">{{ __('Zrušit') }}</flux:button>
         </flux:modal.close>
 
-        <flux:button type="submit" variant="primary">{{ __('Create') }}</flux:button>
+        <flux:button type="submit" variant="primary">{{ __('Vytvořit událost') }}</flux:button>
     </div>
 </form>

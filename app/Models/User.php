@@ -9,6 +9,7 @@ use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,16 +17,16 @@ use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $email
- * @property \Carbon\CarbonImmutable|null $email_verified_at
- * @property string|null $phone
- * @property string $password
- * @property \Carbon\CarbonImmutable|null $last_login_at
- * @property \Carbon\CarbonImmutable $created_at
- * @property \Carbon\CarbonImmutable $updated_at
- * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property-read int $id
+ * @property-read string $name
+ * @property-read string $email
+ * @property-read \Carbon\CarbonImmutable|null $email_verified_at
+ * @property-read string|null $phone
+ * @property-read string $password
+ * @property-read \Carbon\CarbonImmutable|null $last_login_at
+ * @property-read \Carbon\CarbonImmutable $created_at
+ * @property-read \Carbon\CarbonImmutable $updated_at
+ * @property-read \Carbon\CarbonImmutable|null $deleted_at
  */
 #[ObservedBy(UserObserver::class)]
 final class User extends Authenticatable
@@ -53,6 +54,14 @@ final class User extends Authenticatable
     {
         return $this->belongsToMany(Event::class)
             ->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<EventAttendance, $this>
+     */
+    public function eventAttendances(): HasMany
+    {
+        return $this->hasMany(EventAttendance::class);
     }
 
     public function initials(): string

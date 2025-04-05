@@ -57,7 +57,7 @@ final class UserFactory extends Factory
     public function staff(): self
     {
         return $this->afterCreating(function (User $user): void {
-            $user->assignRole(Role::Staff);
+            $user->assignRole(Role::Worker);
         });
     }
 }

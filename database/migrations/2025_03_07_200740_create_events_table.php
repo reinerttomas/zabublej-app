@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('contact_email')->nullable();
             $table->string('contact_phone')->nullable();
             $table->boolean('is_multi_person')->default(false);
-            $table->unsignedInteger('children_count')->nullable();
-            $table->unsignedInteger('workers_count')->nullable();
+            $table->unsignedInteger('estimated_children_count')->nullable();
+            $table->unsignedInteger('max_workers')->nullable();
             $table->unsignedInteger('price')->nullable();
             $table->unsignedInteger('reward')->nullable();
             $table->text('note')->nullable();
@@ -33,17 +33,20 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('event_user', function (Blueprint $table): void {
+        Schema::create('event_attendances', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('event_id')->constrained();
             $table->foreignId('user_id')->constrained();
+            $table->unsignedTinyInteger('status');
+            $table->foreignId('processor_id')->nullable()->constrained('users');
+            $table->timestamp('processed_at')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('event_user');
+        Schema::dropIfExists('event_attendances');
         Schema::dropIfExists('events');
     }
 };

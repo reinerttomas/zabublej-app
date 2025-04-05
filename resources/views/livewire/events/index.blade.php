@@ -26,12 +26,14 @@ new class extends Component
     <div class="relative mb-6 w-full">
         <div class="flex items-center justify-between">
             <div>
-                <flux:heading size="xl" level="1">{{ __('Events') }}</flux:heading>
-                <flux:subheading size="lg" class="mb-6">{{ __('Manage your events and attendees') }}</flux:subheading>
+                <flux:heading size="xl" level="1">{{ __('Události') }}</flux:heading>
+                <flux:subheading size="lg" class="mb-6">{{ __('Správa událostí a bublinářů') }}</flux:subheading>
             </div>
             <div>
                 @can('create', Event::class)
-                    <flux:button variant="primary" wire:click="showDialogCreate">{{ __('Create Event') }}</flux:button>
+                    <flux:button variant="primary" wire:click="showDialogCreate">
+                        {{ __('Vytvořit událost') }}
+                    </flux:button>
                 @endcan
             </div>
         </div>

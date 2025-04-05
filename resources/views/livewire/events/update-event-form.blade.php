@@ -45,10 +45,10 @@ new class extends Component
     public bool $isMultiPerson = false;
 
     #[Validate(['nullable', 'integer', 'min:0'])]
-    public ?int $childrenCount = null;
+    public ?int $estimatedChildrenCount = null;
 
     #[Validate(['nullable', 'integer', 'min:1'])]
-    public ?int $workersCount = null;
+    public ?int $maxWorkers = null;
 
     #[Validate(['nullable', 'integer', 'min:1'])]
     public ?float $price = null;
@@ -72,8 +72,8 @@ new class extends Component
         $this->contactEmail = $this->event->contact_email;
         $this->contactPhone = $this->event->contact_phone;
         $this->isMultiPerson = $this->event->is_multi_person;
-        $this->childrenCount = $this->event->children_count;
-        $this->workersCount = $this->event->workers_count;
+        $this->estimatedChildrenCount = $this->event->estimated_children_count;
+        $this->maxWorkers = $this->event->max_workers;
         $this->price = $this->event->price;
         $this->reward = $this->event->reward;
         $this->note = $this->event->note;
@@ -94,8 +94,8 @@ new class extends Component
             'contact_email' => $this->contactEmail,
             'contact_phone' => $this->contactPhone,
             'is_multi_person' => $this->isMultiPerson,
-            'children_count' => $this->childrenCount,
-            'workers_count' => $this->workersCount,
+            'estimated_children_count' => $this->estimatedChildrenCount,
+            'max_workers' => $this->maxWorkers,
             'price' => $this->price,
             'reward' => $this->reward,
             'note' => $this->note,
@@ -104,7 +104,7 @@ new class extends Component
 
         $this->dispatch(LivewireEvent::EventUpdated);
 
-        Flux::toast('Saved.', variant: 'success');
+        Flux::toast('Uloženo.', variant: 'success');
     }
 
     #[On(LivewireEvent::EventUpdated->value)]
@@ -124,7 +124,7 @@ new class extends Component
         </div>
 
         <flux:input label="{{ __('Název') }}" wire:model="name" />
-        <flux:editor label="{{ __('Popis') }}" wire:model="description" />
+        <flux:textarea label="{{ __('Popis') }}" wire:model="description" />
     </div>
 
     <flux:separator variant="subtle" />
@@ -137,7 +137,7 @@ new class extends Component
             <flux:input type="time" label="{{ __('Čas') }}" wire:model="startTime" />
         </div>
 
-        <flux:input label="{{ __('Lokace') }}" wire:model="location" />
+        <flux:input label="{{ __('Místo') }}" wire:model="location" />
     </div>
 
     <flux:separator variant="subtle" />
@@ -148,8 +148,8 @@ new class extends Component
         <flux:checkbox label="{{ __('Událost je pro více osob') }}" wire:model="isMultiPerson" />
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <flux:input label="{{ __('Počet dětí') }}" wire:model="childrenCount" />
-            <flux:input label="{{ __('Počet pracovníků') }}" wire:model="workersCount" />
+            <flux:input label="{{ __('Počet dětí') }}" wire:model="estimatedChildrenCount" />
+            <flux:input label="{{ __('Počet pracovníků') }}" wire:model="maxWorkers" />
         </div>
     </div>
 

@@ -16,23 +16,24 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
  */
 abstract class Builder extends EloquentBuilder
 {
-    public function orWhereConditions(Closure ...$conditions): static
+    public function orConditions(Closure ...$conditions): static
     {
         if ($conditions === []) {
             throw new InvalidArgumentException('At least one condition must be provided.');
         }
 
         return $this->where(function (self $query) use ($conditions): void {
+            $conditionsCollection = collect($conditions);
+
             // Aplikujeme první podmínku
-            $firstCondition = array_shift($conditions);
-            $firstCondition($query);
+            $conditionsCollection->first()($query);
 
             // Aplikujeme všechny ostatní podmínky s OR
-            foreach ($conditions as $condition) {
+            $conditionsCollection->skip(1)->each(function (Closure $condition) use ($query): void {
                 $query->orWhere(function (self $subQuery) use ($condition): void {
                     $condition($subQuery);
                 });
-            }
+            });
         });
     }
 

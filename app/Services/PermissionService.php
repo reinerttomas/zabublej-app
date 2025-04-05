@@ -31,17 +31,23 @@ final readonly class PermissionService
     {
         $permissions = match ($role->name) {
             RoleEnum::Admin->value => [
+                // Users
                 PermissionEnum::ViewAnyUser,
                 PermissionEnum::InviteUser,
                 PermissionEnum::UpdateUser,
                 PermissionEnum::DeleteUser,
+
+                // Events
                 PermissionEnum::ViewAnyEvent,
-                PermissionEnum::ViewPriceEvent,
                 PermissionEnum::CreateEvent,
                 PermissionEnum::UpdateEvent,
                 PermissionEnum::DeleteEvent,
+
+                // Event Attendances
+                PermissionEnum::ViewAnyEventAttendance,
+                PermissionEnum::UpdateEventAttendance,
             ],
-            RoleEnum::Staff->value => [
+            RoleEnum::Worker->value => [
                 PermissionEnum::ViewEvent,
             ],
             default => [],

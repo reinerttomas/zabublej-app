@@ -15,9 +15,12 @@ enum Permission: string
 
     // Events
     case ViewAnyEvent = 'view-any-event';
-    case ViewPriceEvent = 'view-price-event';
     case ViewEvent = 'view-event';
     case CreateEvent = 'create-event';
     case UpdateEvent = 'update-event';
     case DeleteEvent = 'delete-event';
+
+    // Event Users
+    case ViewAnyEventAttendance = 'view-any-event-attendance';
+    case UpdateEventAttendance = 'update-event-attendance';
 }

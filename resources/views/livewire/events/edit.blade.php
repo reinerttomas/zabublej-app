@@ -51,16 +51,19 @@ new class extends Component
         <div class="flex items-center justify-between">
             <div>
                 <flux:heading size="xl" level="1">{{ $event->name }}</flux:heading>
-                <flux:subheading size="lg" class="mb-6">{{ __('Manage your events and attendees') }}</flux:subheading>
+                <flux:subheading size="lg" class="mb-6">{{ __('Informace o události') }}</flux:subheading>
             </div>
-            <div class="flex items-end gap-4">
+            <div class="flex items-end gap-2">
                 @can('update', $event)
                     @switch($event->status)
                         @case(EventStatus::Draft)
                             <flux:button variant="primary" wire:click="changeStatus({{ EventStatus::Published }})">
                                 {{ __('Zveřejnit') }}
                             </flux:button>
-                            <flux:button variant="danger" wire:click="changeStatus({{ EventStatus::Cancelled }})">
+                            <flux:button
+                                class="text-red-600! dark:text-red-500!"
+                                wire:click="changeStatus({{ EventStatus::Cancelled }})"
+                            >
                                 {{ __('Zrušit') }}
                             </flux:button>
 
@@ -69,7 +72,10 @@ new class extends Component
                             <flux:button variant="primary" wire:click="changeStatus({{ EventStatus::Completed }})">
                                 {{ __('Dokončit') }}
                             </flux:button>
-                            <flux:button variant="danger" wire:click="changeStatus({{ EventStatus::Cancelled }})">
+                            <flux:button
+                                class="text-red-600! dark:text-red-500!"
+                                wire:click="changeStatus({{ EventStatus::Cancelled }})"
+                            >
                                 {{ __('Zrušit') }}
                             </flux:button>
 
@@ -89,7 +95,7 @@ new class extends Component
         </div>
         <div class="space-y-6">
             <flux:card>
-                <livewire:events.update-event-user-form :event="$event" />
+                <livewire:events.update-event-attendance-form :event="$event" />
             </flux:card>
         </div>
     </div>

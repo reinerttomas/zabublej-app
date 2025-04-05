@@ -33,14 +33,16 @@ new class extends Component
     <div class="relative mb-6 w-full">
         <div class="flex items-center justify-between">
             <div>
-                <flux:heading size="xl" level="1">{{ __('Users') }}</flux:heading>
+                <flux:heading size="xl" level="1">{{ __('Uživatelé') }}</flux:heading>
                 <flux:subheading size="lg" class="mb-6">
-                    {{ __('Manage your profile and account settings') }}
+                    {{ __('Správa uživatelů') }}
                 </flux:subheading>
             </div>
             <div>
                 @can('invite', User::class)
-                    <flux:button variant="primary" wire:click="showDialogInvite">{{ __('Invite User') }}</flux:button>
+                    <flux:button variant="primary" wire:click="showDialogInvite">
+                        {{ __('Odeslat pozvánku') }}
+                    </flux:button>
                 @endcan
             </div>
         </div>
